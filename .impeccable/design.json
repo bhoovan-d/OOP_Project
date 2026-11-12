@@ -1,0 +1,16 @@
+{
+  "name": "Triage Board",
+  "mode": "operate",
+  "colors": {
+    "ground": "#f4f6f9", "surface": "#ffffff", "sunken": "#eef1f5", "line": "#e1e6ee", "lineStrong": "#c9d1dd",
+    "ink": "#0e1726", "ink2": "#3c4a60", "ink3": "#5b687c",
+    "rail": "#0f2341", "rail2": "#1a3358", "railInk": "#c7d2e4",
+    "action": "#1f4fd1", "actionHover": "#1a43b3", "actionSoft": "#e8eefc",
+    "p1": "#d42a1e", "p2": "#e2620f", "p3": "#c98a04", "p4": "#2b8a3e",
+    "ok": "#2b8a3e", "warn": "#b7790a", "bad": "#c8261b",
+    "chart": { "opened": "#1f4fd1", "resolved": "#0e9384", "single": "#1a3358" }
+  },
+  "fonts": { "sans": "Manrope Variable", "mono": "JetBrains Mono" },
+  "radius": { "control": 6, "panel": 8, "tag": "3px 3px 3px 9px" },
+  "sizes": { "rail": 248, "topbar": 64, "control": 36, "controlSm": 32 }
+}

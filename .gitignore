@@ -1,0 +1,12 @@
+node_modules/
+frontend/dist/
+backend/target/
+backend/data/
+backend/src/main/resources/static/
+*.log
+.idea/
+.vscode/
+*.iml
+.DS_Store
+.impeccable/review/
+.impeccable/live/

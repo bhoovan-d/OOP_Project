@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: i-itsm
+  threads:
+    virtual:
+      enabled: true          # every request / async task on a cheap virtual thread -> thousands of concurrent requests
+  datasource:
+    url: ${DB_URL:jdbc:h2:file:./data/itsm;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH}
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: ${DB_POOL:20}
+  jpa:
+    open-in-view: false      # no lazy loading during view rendering -> predictable queries, short DB connections
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_batch_fetch_size: 50
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+  mvc:
+    async:
+      request-timeout: -1    # SSE streams manage their own timeout
+
+server:
+  port: ${PORT:8080}
+  compression:
+    enabled: true
+    mime-types: application/json,text/html,text/css,application/javascript
+  error:
+    include-message: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+itsm:
+  jwt:
+    secret: ${JWT_SECRET:dev-only-secret-change-me-in-production-0123456789}
+    ttl: PT8H
+  sla:
+    monitor-interval-ms: 30000
+  seed:
+    enabled: ${SEED:true}
+
+logging:
+  level:
+    org.hibernate.orm.deprecation: error
