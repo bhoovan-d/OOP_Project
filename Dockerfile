@@ -17,4 +17,4 @@ WORKDIR /app
 COPY --from=api /app/backend/target/itsm-1.0.0.jar app.jar
 EXPOSE 8080
 HEALTHCHECK CMD wget -qO- http://localhost:8080/actuator/health || exit 1
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=60", "-jar", "app.jar"]

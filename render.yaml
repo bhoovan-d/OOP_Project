@@ -1,0 +1,10 @@
+# Render Blueprint: New -> Blueprint -> pick this repo. One free Docker web service.
+services:
+  - type: web
+    name: i-itsm
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
