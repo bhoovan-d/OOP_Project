@@ -1,6 +1,6 @@
 # Production-style profile: run with SPRING_PROFILES_ACTIVE=postgres
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/itsm}
+    url: ${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:itsm}}
     username: ${DB_USER:itsm}
     password: ${DB_PASSWORD:itsm}

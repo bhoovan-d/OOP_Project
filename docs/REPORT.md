@@ -422,7 +422,7 @@ Not implemented (documented): HTTPS termination (deploy behind a TLS proxy), ref
 
 ## 10. Testing
 
-Run: `cd backend && ./mvnw test` → 30 tests, all passing.
+Run: `cd backend && ./mvnw test` → 41 tests, all passing (the 10 HTTP tests run twice: on H2 and on an embedded PostgreSQL, plus one Postgres read-endpoint sweep).
 
 | # | Test | Category |
 |---|---|---|

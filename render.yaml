@@ -1,4 +1,4 @@
-# Render Blueprint: New -> Blueprint -> pick this repo. One free Docker web service.
+# Render Blueprint: New -> Blueprint -> pick this repo. Free Docker web service + free PostgreSQL.
 services:
   - type: web
     name: i-itsm
@@ -8,3 +8,23 @@ services:
     envVars:
       - key: JWT_SECRET
         generateValue: true
+      - key: SPRING_PROFILES_ACTIVE
+        value: postgres
+      - key: DB_POOL
+        value: "5"
+      - key: DB_HOST
+        fromDatabase: { name: i-itsm-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: i-itsm-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: i-itsm-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: i-itsm-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: i-itsm-db, property: password }
+
+databases:
+  - name: i-itsm-db
+    plan: free
+    databaseName: itsm
+    user: itsm

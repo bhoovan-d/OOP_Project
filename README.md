@@ -5,7 +5,7 @@ CS F213 OOP project, Semester I 2026-27. A full-stack incident management platfo
 - **Backend:** Java 21 bytecode on Spring Boot 3.5 (Web MVC, Data JPA, Security + JWT, Validation, Actuator), virtual threads
 - **Frontend:** React 18 + TypeScript + Vite, Tailwind CSS 4, TanStack Query, Recharts, Server-Sent Events
 - **Database:** H2 (zero-setup file DB) by default, PostgreSQL via the `postgres` profile / Docker Compose
-- **Tests:** 30 JUnit 5 tests (domain, intelligence, strategies, full HTTP integration)
+- **Tests:** 41 JUnit 5 tests (domain, intelligence, strategies, full HTTP integration on H2 and on embedded PostgreSQL)
 
 Full design write-up for the report (architecture, UML, ER, patterns, test cases, technology justification): **[docs/REPORT.md](docs/REPORT.md)**. Visual design system: [DESIGN.md](DESIGN.md).
 
