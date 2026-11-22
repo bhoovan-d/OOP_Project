@@ -5,7 +5,7 @@ import { api, qs, type Catalog, type Page, type Priority, type Summary, type Use
 import { useUser } from '../lib/auth'
 import { STATUS_LABEL } from '../lib/format'
 import { IncidentTable, type SortState } from '../components/IncidentTable'
-import { Empty, ErrorNote, PageHeader, Pager, SkeletonRows, TriageTag, cx } from '../components/ui'
+import { Empty, ErrorNote, PageHeader, Pager, SkeletonRows, PriorityTag, cx } from '../components/ui'
 
 const STATUSES = Object.keys(STATUS_LABEL) as (keyof typeof STATUS_LABEL)[]
 const FILTER_KEYS = ['q', 'status', 'priority', 'serviceId', 'categoryId', 'assigneeId', 'slaStatus', 'breached', 'unassigned', 'open', 'from', 'to']
@@ -84,8 +84,8 @@ export default function Incidents() {
                   const on = priorities.includes(p)
                   return (
                     <button key={p} type="button" aria-pressed={on} onClick={() => update({ priority: on ? priorities.filter(x => x !== p) : [...priorities, p] })}
-                            className={cx('rounded-md p-1 border transition-colors', on ? 'border-ink bg-sunken' : 'border-transparent opacity-55 hover:opacity-100')}>
-                      <TriageTag priority={p} size="sm" />
+                            className={cx('rounded-[4px] p-1 border transition-colors', on ? 'border-ink bg-sunken' : 'border-transparent opacity-55 hover:opacity-100')}>
+                      <PriorityTag priority={p} size="sm" />
                     </button>
                   )
                 })}
@@ -126,7 +126,7 @@ function Select({ label, value, onChange, options }: { label: string; value: str
 
 function Toggle({ label, on, onChange }: { label: string; on: boolean; onChange: (on: boolean) => void }) {
   return (
-    <label className="inline-flex items-center gap-2 h-9 cursor-pointer text-[13px] font-semibold text-ink-2">
+    <label className="inline-flex items-center gap-2 h-9 cursor-pointer text-[13.5px] font-semibold text-ink-2">
       <input type="checkbox" className="size-4 accent-[var(--color-action)]" checked={on} onChange={e => onChange(e.target.checked)} />{label}
     </label>
   )

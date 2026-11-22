@@ -8,7 +8,7 @@ import {
   type ServiceView, type SettingsView, type SlaView, type UserView,
 } from '../lib/api'
 import { fmtDateTime, minutes, titleCase } from '../lib/format'
-import { CapacityBar, Dialog, Empty, ErrorNote, Field, PageHeader, Pager, SkeletonRows, Spinner, TriageTag, cx } from '../components/ui'
+import { CapacityBar, Dialog, Empty, ErrorNote, Field, PageHeader, Pager, SkeletonRows, Spinner, PriorityTag, cx } from '../components/ui'
 
 export default function Admin() {
   const { section } = useParams()
@@ -38,7 +38,7 @@ const Footer = ({ busy, onCancel, label = 'Save' }: { busy: boolean; onCancel: (
   <div className="flex justify-end gap-2 pt-2"><button type="button" className="btn-ghost" onClick={onCancel}>Cancel</button><button className="btn-primary" disabled={busy}>{busy ? <Spinner /> : label}</button></div>
 )
 const Check = ({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) => (
-  <label className="inline-flex items-center gap-2 text-[13px] font-semibold text-ink-2 cursor-pointer"><input type="checkbox" className="size-4 accent-[var(--color-action)]" checked={checked} onChange={e => onChange(e.target.checked)} />{label}</label>
+  <label className="inline-flex items-center gap-2 text-[13.5px] font-semibold text-ink-2 cursor-pointer"><input type="checkbox" className="size-4 accent-[var(--color-action)]" checked={checked} onChange={e => onChange(e.target.checked)} />{label}</label>
 )
 
 /* ===================================== People ===================================== */
@@ -57,8 +57,8 @@ function Users() {
         <div className="flex gap-1 px-2 border-b border-line" role="tablist">
           {(['', 'EMPLOYEE', 'TECHNICIAN', 'ADMIN'] as const).map(r => (
             <button key={r} role="tab" aria-selected={role === r} onClick={() => setRole(r)} className={cx('relative h-11 px-3 text-[13.5px] font-semibold', role === r ? 'text-ink' : 'text-ink-3 hover:text-ink')}>
-              {r ? titleCase(r) + 's' : 'Everyone'}<span className="mono text-[11px] text-ink-3 ml-1.5">{(users.data ?? []).filter(u => !r || u.role === r).length}</span>
-              {role === r && <span className="absolute inset-x-2 -bottom-px h-[2px] bg-action rounded-full" />}
+              {r ? titleCase(r) + 's' : 'Everyone'}<span className="mono text-[15px] font-semibold text-ink-3 ml-1.5">{(users.data ?? []).filter(u => !r || u.role === r).length}</span>
+              {role === r && <span className="absolute inset-x-2 -bottom-px h-[3px] bg-action" />}
             </button>
           ))}
         </div>
@@ -69,10 +69,10 @@ function Users() {
               <tbody>
                 {rows.map(u => (
                   <tr key={u.id} className={cx('hover:bg-sunken/60', !u.active && 'opacity-55')}>
-                    <td className="td"><div className="font-semibold text-[13px]">{u.fullName}</div><div className="mono text-[11.5px] text-ink-3">{u.code}</div></td>
-                    <td className="td text-[13px]">{titleCase(u.role)}{u.itManager && <span className="block text-[11.5px] text-ink-3">IT manager</span>}{u.teamLead && <span className="block text-[11.5px] text-ink-3">Team lead</span>}</td>
-                    <td className="td text-[12.5px] text-ink-2">{u.email}<div className="text-ink-3">{u.phone ?? 'No phone (no SMS)'}</div></td>
-                    <td className="td text-[12.5px] text-ink-2">{u.role === 'TECHNICIAN' ? <>{u.skills?.map(s => s.name).join(', ')}<div className="text-ink-3">{u.experienceYears} yrs{u.available ? '' : ' · unavailable'}</div></> : u.department ?? '—'}{!u.active && <div className="text-bad font-semibold">Deactivated</div>}</td>
+                    <td className="td"><div className="font-semibold text-[13.5px]">{u.fullName}</div><div className="mono text-[15px] font-semibold text-ink-3">{u.code}</div></td>
+                    <td className="td text-[13.5px]">{titleCase(u.role)}{u.itManager && <span className="block text-[12px] text-ink-3">IT manager</span>}{u.teamLead && <span className="block text-[12px] text-ink-3">Team lead</span>}</td>
+                    <td className="td text-[13px] text-ink-2">{u.email}<div className="text-ink-3">{u.phone ?? 'No phone (no SMS)'}</div></td>
+                    <td className="td text-[13px] text-ink-2">{u.role === 'TECHNICIAN' ? <>{u.skills?.map(s => s.name).join(', ')}<div className="text-ink-3">{u.experienceYears} yrs{u.available ? '' : ' · unavailable'}</div></> : u.department ?? '—'}{!u.active && <div className="text-bad font-semibold">Deactivated</div>}</td>
                     <td className="td">{u.role === 'TECHNICIAN' ? <CapacityBar value={u.activeLoad ?? 0} max={u.maxWorkload ?? 1} /> : <span className="text-ink-3">—</span>}</td>
                     <td className="td"><button className="btn-ghost btn-sm" onClick={() => setEditing(u)} aria-label={`Edit ${u.fullName}`}><Pencil className="size-4" /></button></td>
                   </tr>
@@ -117,7 +117,7 @@ function UserForm({ user, categories, close }: { user: UserView | null; categori
           <Field label="Mobile (SMS alerts)" error={fieldErr(save.error, 'phone')}><input className="input" value={f.phone} onChange={e => set('phone', e.target.value)} /></Field>
         </div>
         {tech && (
-          <div className="rounded-lg bg-sunken/70 p-4 space-y-3">
+          <div className="rounded-[6px] bg-sunken/70 p-4 space-y-3">
             <div>
               <span className="field-label">Skills</span>
               <div className="flex flex-wrap gap-1.5">
@@ -169,11 +169,11 @@ function Services() {
             <tbody>
               {services.data!.map(s => (
                 <tr key={s.id} className={cx('hover:bg-sunken/60', !s.active && 'opacity-55')}>
-                  <td className="td"><div className="font-semibold text-[13px]">{s.name}</div><div className="text-[12px] text-ink-3">{s.description}</div></td>
-                  <td className="td text-[13px]">{titleCase(s.criticality)}</td>
-                  <td className="td text-[13px]">{s.slaPolicy?.name ?? <span className="text-ink-3">Default</span>}</td>
-                  <td className="td text-[13px]">{s.defaultCategory?.name ?? '—'}</td>
-                  <td className="td text-right mono text-[13px]">{s.userBase.toLocaleString()}</td>
+                  <td className="td"><div className="font-semibold text-[13.5px]">{s.name}</div><div className="text-[12.5px] text-ink-3">{s.description}</div></td>
+                  <td className="td text-[13.5px]">{titleCase(s.criticality)}</td>
+                  <td className="td text-[13.5px]">{s.slaPolicy?.name ?? <span className="text-ink-3">Default</span>}</td>
+                  <td className="td text-[13.5px]">{s.defaultCategory?.name ?? '—'}</td>
+                  <td className="td text-right mono text-[16px] font-semibold">{s.userBase.toLocaleString()}</td>
                   <td className="td"><button className="btn-ghost btn-sm" onClick={() => setEditing(s)} aria-label={`Edit ${s.name}`}><Pencil className="size-4" /></button></td>
                 </tr>
               ))}
@@ -230,11 +230,11 @@ function SlaPolicies() {
               <span className="panel-title">{p.name}{p.defaultPolicy && <span className="chip h-5 ml-2 bg-action-soft text-action border-action/25">Default</span>}</span>
               <button className="btn-ghost btn-sm" onClick={() => setEditing(p)} aria-label={`Edit ${p.name}`}><Pencil className="size-4" /></button>
             </div>
-            <p className="px-4 pt-3 text-[12.5px] text-ink-3">{p.description}</p>
+            <p className="px-4 pt-3 text-[13px] text-ink-3">{p.description}</p>
             <table className="w-full mt-2">
               <thead><tr><th className="th">Priority</th><th className="th text-right">Respond</th><th className="th text-right">Resolve</th></tr></thead>
               <tbody>{P.map(pr => (
-                <tr key={pr}><td className="td"><TriageTag priority={pr} size="sm" /></td><td className="td text-right mono text-[13px]">{minutes(p.targets[pr].responseMinutes)}</td><td className="td text-right mono text-[13px]">{minutes(p.targets[pr].resolutionMinutes)}</td></tr>
+                <tr key={pr}><td className="td"><PriorityTag priority={pr} size="sm" /></td><td className="td text-right mono text-[16px] font-semibold">{minutes(p.targets[pr].responseMinutes)}</td><td className="td text-right mono text-[16px] font-semibold">{minutes(p.targets[pr].resolutionMinutes)}</td></tr>
               ))}</tbody>
             </table>
           </section>
@@ -259,7 +259,7 @@ function SlaForm({ policy, close }: { policy: SlaView | null; close: () => void 
           <thead><tr><th className="th">Priority</th><th className="th">Respond (min)</th><th className="th">Resolve (min)</th></tr></thead>
           <tbody>{P.map(p => (
             <tr key={p}>
-              <td className="td"><TriageTag priority={p} size="sm" /></td>
+              <td className="td"><PriorityTag priority={p} size="sm" /></td>
               <td className="td"><input className="input mono h-8" type="number" min={1} value={f.targets[p].responseMinutes} onChange={e => setT(p, 'responseMinutes', Number(e.target.value))} aria-label={`${p} response minutes`} /></td>
               <td className="td"><input className="input mono h-8" type="number" min={1} value={f.targets[p].resolutionMinutes} onChange={e => setT(p, 'resolutionMinutes', Number(e.target.value))} aria-label={`${p} resolution minutes`} /></td>
             </tr>
@@ -285,7 +285,7 @@ function Categories() {
       <div className="panel divide-y divide-line">
         {q.isLoading ? <SkeletonRows /> : q.data!.map(c => (
           <div key={c.id} className={cx('px-4 py-3.5 flex items-start gap-4', !c.active && 'opacity-55')}>
-            <div className="w-[180px] shrink-0"><div className="font-bold text-[13.5px]">{c.name}</div><div className="text-[12px] text-ink-3">{c.description}</div></div>
+            <div className="w-[180px] shrink-0"><div className="font-bold text-[13.5px]">{c.name}</div><div className="text-[12.5px] text-ink-3">{c.description}</div></div>
             <div className="flex-1 flex flex-wrap gap-1.5">{c.keywords.map(k => <span key={k} className="chip h-6 bg-sunken text-ink-2 border-line font-mono font-normal">{k}</span>)}</div>
             <button className="btn-ghost btn-sm" onClick={() => setEditing(c)} aria-label={`Edit ${c.name}`}><Pencil className="size-4" /></button>
           </div>
@@ -305,7 +305,7 @@ function CategoryForm({ cat, close }: { cat: CategoryView | null; close: () => v
       <form className="space-y-4" onSubmit={e => { e.preventDefault(); save.mutate(() => cat ? put(`/admin/categories/${cat.id}`, body()) : post('/admin/categories', body())) }}>
         <Field label="Name" error={fieldErr(save.error, 'name')}><input className="input" value={f.name} onChange={e => setF(s => ({ ...s, name: e.target.value }))} /></Field>
         <Field label="Description"><input className="input" value={f.description} onChange={e => setF(s => ({ ...s, description: e.target.value }))} /></Field>
-        <Field label="Classifier keywords" hint="Comma separated. Words in an incident's title count double."><textarea className="input font-mono text-[13px]" rows={3} value={f.keywords} onChange={e => setF(s => ({ ...s, keywords: e.target.value }))} /></Field>
+        <Field label="Classifier keywords" hint="Comma separated. Words in an incident's title count double."><textarea className="input font-mono text-[16px] font-semibold" rows={3} value={f.keywords} onChange={e => setF(s => ({ ...s, keywords: e.target.value }))} /></Field>
         <Check label="Active" checked={f.active} onChange={v => setF(s => ({ ...s, active: v }))} />
         {formErr(save.error)}
         <Footer busy={save.isPending} onCancel={close} />
@@ -330,13 +330,13 @@ function Automation() {
     <>
       <PageHeader title="Automation" sub="How new incidents are routed and how the SLA watchdog behaves. Changes apply immediately." />
       <section className="panel mb-5">
-        <div className="panel-head"><span className="panel-title">Assignment strategy</span><span className="text-[12px] text-ink-3">used for every automatic assignment</span></div>
+        <div className="panel-head"><span className="panel-title">Assignment strategy</span><span className="text-[12.5px] text-ink-3">used for every automatic assignment</span></div>
         <div className="grid md:grid-cols-2 gap-3 p-4" role="radiogroup" aria-label="Assignment strategy">
           {s.strategies.map(st => (
             <button key={st.key} role="radio" aria-checked={st.active} onClick={() => save.mutate({ assignmentStrategy: st.key })}
-                    className={cx('text-left rounded-lg border p-4 transition-colors', st.active ? 'border-action bg-action-soft/60' : 'border-line hover:border-ink-3')}>
+                    className={cx('text-left rounded-[6px] border p-4 transition-colors', st.active ? 'border-action bg-action-soft/60' : 'border-line hover:border-ink-3')}>
               <div className="flex items-center gap-2"><span className={cx('size-4 rounded-full border-2 grid place-items-center', st.active ? 'border-action' : 'border-line-strong')}>{st.active && <span className="size-2 rounded-full bg-action" />}</span><span className="font-bold">{st.name}</span></div>
-              <p className="text-[12.5px] text-ink-3 mt-1 pl-6">{st.description}</p>
+              <p className="text-[13px] text-ink-3 mt-1 pl-6">{st.description}</p>
             </button>
           ))}
         </div>
@@ -354,7 +354,7 @@ function Automation() {
             <input type="range" min={0.5} max={0.95} step={0.05} defaultValue={s.slaWarningThreshold} className="w-40 accent-[var(--color-action)]"
                    onMouseUp={e => save.mutate({ slaWarningThreshold: Number((e.target as HTMLInputElement).value) })}
                    onKeyUp={e => save.mutate({ slaWarningThreshold: Number((e.target as HTMLInputElement).value) })} aria-label="Warning threshold" />
-            <span className="mono text-[13px] w-10 text-right">{Math.round(s.slaWarningThreshold * 100)}%</span>
+            <span className="mono text-[16px] font-semibold w-10 text-right">{Math.round(s.slaWarningThreshold * 100)}%</span>
           </Setting>
         </div>
       </section>
@@ -363,7 +363,7 @@ function Automation() {
 }
 
 const Setting = ({ title, desc, children }: { title: string; desc: string; children: ReactNode }) => (
-  <div className="flex flex-wrap items-center gap-4 justify-between"><div className="max-w-[60ch]"><div className="font-bold text-[13.5px]">{title}</div><div className="text-[12.5px] text-ink-3">{desc}</div></div><div className="flex items-center gap-3">{children}</div></div>
+  <div className="flex flex-wrap items-center gap-4 justify-between"><div className="max-w-[60ch]"><div className="font-bold text-[13.5px]">{title}</div><div className="text-[13px] text-ink-3">{desc}</div></div><div className="flex items-center gap-3">{children}</div></div>
 )
 const Switch = ({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) => (
   <button role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)} className={cx('relative w-11 h-6 rounded-full transition-colors', on ? 'bg-action' : 'bg-line-strong')}>
@@ -397,12 +397,12 @@ function Audit() {
               <tbody>
                 {q.data!.content.map(a => (
                   <tr key={a.id} className="hover:bg-sunken/60 align-top">
-                    <td className="td mono text-[12px] text-ink-2">{fmtDateTime(a.timestamp)}</td>
-                    <td className="td">{a.incidentId ? <Link to={`/incidents/${a.incidentId}`} className="mono text-[12.5px] text-action hover:underline">{a.incidentNumber}</Link> : <span className="text-ink-3 text-[12px]">Admin</span>}</td>
-                    <td className="td text-[13px]">{a.actor}</td>
-                    <td className={cx('td text-[12.5px] font-semibold', /BREACH|ESCALAT|MAJOR/.test(a.action) && 'text-bad')}>{titleCase(a.action)}</td>
-                    <td className="td text-[13px] text-ink-2">{a.description}</td>
-                    <td className="td mono text-[11.5px] text-ink-3">{a.fromState && a.toState && a.fromState !== a.toState ? `${a.fromState} → ${a.toState}` : ''}</td>
+                    <td className="td mono text-[15px] font-semibold text-ink-2">{fmtDateTime(a.timestamp)}</td>
+                    <td className="td">{a.incidentId ? <Link to={`/incidents/${a.incidentId}`} className="mono text-[15px] font-semibold text-action hover:underline">{a.incidentNumber}</Link> : <span className="text-ink-3 text-[12.5px]">Admin</span>}</td>
+                    <td className="td text-[13.5px]">{a.actor}</td>
+                    <td className={cx('td text-[13px] font-semibold', /BREACH|ESCALAT|MAJOR/.test(a.action) && 'text-bad')}>{titleCase(a.action)}</td>
+                    <td className="td text-[13.5px] text-ink-2">{a.description}</td>
+                    <td className="td mono text-[15px] font-semibold text-ink-3">{a.fromState && a.toState && a.fromState !== a.toState ? `${a.fromState} → ${a.toState}` : ''}</td>
                   </tr>
                 ))}
               </tbody>
@@ -429,14 +429,14 @@ function Outbox() {
             <ul className="divide-y divide-line">
               {q.data!.content.map(n => (
                 <li key={n.id} className="px-4 py-3 grid grid-cols-[28px_1fr_auto] gap-3">
-                  <span className={cx('size-7 rounded-md grid place-items-center', n.channel === 'SMS' ? 'bg-p4-soft text-[#1f6b30]' : 'bg-action-soft text-action')}>
+                  <span className={cx('size-7 rounded-[3px] grid place-items-center', n.channel === 'SMS' ? 'bg-[#efeaf7] text-[#553a8f]' : 'bg-action-soft text-action')}>
                     {n.channel === 'SMS' ? <MessageSquareText className="size-4" /> : <Mail className="size-4" />}
                   </span>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 text-[12.5px]"><span className="font-bold">{n.title}</span><span className="text-ink-3 truncate">to {n.recipient}</span></div>
-                    <p className="text-[12.5px] text-ink-2 whitespace-pre-line line-clamp-3 max-w-[90ch]">{n.message}</p>
+                    <div className="flex items-center gap-2 text-[13px]"><span className="font-bold">{n.title}</span><span className="text-ink-3 truncate">to {n.recipient}</span></div>
+                    <p className="text-[13px] text-ink-2 whitespace-pre-line line-clamp-3 max-w-[90ch]">{n.message}</p>
                   </div>
-                  <div className="text-right text-[11.5px] text-ink-3"><div className="mono">{fmtDateTime(n.createdAt)}</div><div className="mono">{n.externalId}</div></div>
+                  <div className="text-right text-[12px] text-ink-3"><div className="mono">{fmtDateTime(n.createdAt)}</div><div className="mono">{n.externalId}</div></div>
                 </li>
               ))}
             </ul>

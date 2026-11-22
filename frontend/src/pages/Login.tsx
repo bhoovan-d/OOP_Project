@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { ApiError, type Priority } from '../lib/api'
-import { ErrorNote, Field, Spinner, TriageTag } from '../components/ui'
+import { ErrorNote, Field, Spinner, PriorityTag } from '../components/ui'
 
 const DEMO = [
   { role: 'Employee', email: 'rohan@itsm.local', password: 'User@123', note: 'Reports & tracks incidents' },
@@ -39,43 +39,44 @@ export default function Login({ mode }: { mode: 'login' | 'register' }) {
 
   return (
     <div className="min-h-dvh grid lg:grid-cols-[1.05fr_1fr]">
-      <section className="hidden lg:flex flex-col bg-rail text-rail-ink px-14 py-12">
-        <div className="flex items-center gap-3">
-          <span className="size-9 rounded-lg bg-rail-2 grid place-items-center">
-            <svg viewBox="0 0 32 32" className="size-6" aria-hidden><path d="M9 8h10l4 4v12H9z" fill="#fff" /><rect x="9" y="8" width="14" height="5" fill="#d42a1e" /></svg>
-          </span>
-          <span className="text-white font-extrabold text-[17px] tracking-tight">I-ITSM</span>
-        </div>
-        <div className="my-auto max-w-[520px]">
-          <h1 className="text-white text-[34px] leading-[1.15] font-extrabold">Every incident triaged the moment it's reported.</h1>
-          <p className="mt-4 text-[15px] leading-relaxed text-rail-ink/90 max-w-[46ch]">
+      <section className="hidden lg:flex flex-col bg-board text-chalk px-14 py-12">
+        <span className="plate self-start inline-flex items-end h-11 px-4 pb-1 pt-4 font-display font-extrabold text-[24px] leading-none">I-ITSM</span>
+        <div className="my-auto max-w-[560px]">
+          <h1 className="font-display text-white text-[48px] leading-[1.02] font-bold">Every incident triaged the moment it's reported.</h1>
+          <p className="mt-4 text-[16px] leading-relaxed text-chalk max-w-[46ch]">
             Classified, prioritised, put on an SLA clock and routed to the right technician automatically, with every step on the record.
           </p>
-          <ul className="mt-10 space-y-2.5" aria-label="Example triage board">
+          <div className="mt-10 grid grid-cols-4 gap-3" aria-label="Example board">
+            {[['14', 'Open'], ['3', 'At risk'], ['2', 'Breached'], ['93', 'SLA met %']].map(([v, l]) => (
+              <div key={l}>
+                <span className="plate flex items-end justify-center pt-4 pb-1 font-display font-extrabold text-[40px] leading-[0.9] tabular-nums">{v}</span>
+                <span className="block text-center text-[11px] font-semibold uppercase tracking-[0.12em] mt-2">{l}</span>
+              </div>
+            ))}
+          </div>
+          <ul className="mt-6 divide-y divide-board-line border-y border-board-line" aria-label="Example queue">
             {BOARD.map(b => (
-              <li key={b.n} className="flex items-center gap-3 rounded-lg bg-rail-2/70 px-3.5 py-3">
-                <TriageTag priority={b.p} />
-                <span className="min-w-0 flex-1">
-                  <span className="mono text-[11.5px] text-rail-ink/70">{b.n}</span>
-                  <span className="block text-white text-[13.5px] font-semibold truncate">{b.t}</span>
+              <li key={b.n} className="flex items-center gap-3 py-2.5">
+                <PriorityTag priority={b.p} />
+                <span className="font-display font-bold text-[17px] text-white tabular-nums w-[74px]">{b.n}</span>
+                <span className="min-w-0 flex-1 text-white text-[14px] truncate">{b.t}</span>
+                <span className="flex items-center gap-[3px]" aria-hidden>
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <span key={i} className={`size-[7px] rounded-full border-[1.5px] ${i < Math.ceil((1 - b.left) * 12) ? (b.left < 0.25 ? 'bg-p1 border-p1' : 'bg-plate border-plate') : 'border-chalk/50'}`} />
+                  ))}
                 </span>
-                <span className="w-[120px] flex items-center gap-2">
-                  <span className="h-[6px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                    <span className={`block h-full rounded-full ${b.left < 0.25 ? 'bg-p1' : b.left < 0.5 ? 'bg-p3' : 'bg-white/70'}`} style={{ width: `${b.left * 100}%` }} />
-                  </span>
-                  <span className="mono text-[11.5px] text-white w-12 text-right">{b.label}</span>
-                </span>
+                <span className="font-display font-bold text-[16px] text-white w-14 text-right tabular-nums">{b.label}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-[11.5px] text-rail-ink/60">Illustrative board. The bar is the SLA time left.</p>
+          <p className="mt-3 text-[12px] text-chalk/80">Illustrative board. Each dot is a twelfth of the SLA window; filled dots are time used.</p>
         </div>
-        <p className="text-[12px] text-rail-ink/60">CS F213 OOP · Intelligent IT Service Management & Incident Resolution</p>
+        <p className="text-[12.5px] text-chalk/80">CS F213 OOP · Intelligent IT Service Management & Incident Resolution</p>
       </section>
 
       <section className="flex items-center justify-center px-5 py-12 bg-surface">
         <div className="w-full max-w-[400px]">
-          <h2 className="text-[24px] font-extrabold">{mode === 'login' ? 'Sign in' : 'Create your account'}</h2>
+          <h2 className="font-display text-[34px] leading-tight font-bold">{mode === 'login' ? 'Sign in' : 'Create your account'}</h2>
           <p className="text-ink-3 mt-1">
             {mode === 'login'
               ? <>New here? <Link to="/register" className="text-action font-semibold hover:underline">Create an employee account</Link></>
@@ -108,13 +109,13 @@ export default function Login({ mode }: { mode: 'login' | 'register' }) {
 
           {mode === 'login' && (
             <div className="mt-9">
-              <div className="text-[12px] font-semibold text-ink-3 mb-2">Demo accounts (seeded data)</div>
+              <div className="text-[11.5px] font-semibold uppercase tracking-[0.12em] text-ink-3 mb-2">Demo accounts · seeded data</div>
               <div className="grid grid-cols-3 gap-2">
                 {DEMO.map(d => (
-                  <button key={d.role} type="button" className="text-left rounded-md border border-line hover:border-action hover:bg-action-soft/40 px-3 py-2.5 transition-colors"
+                  <button key={d.role} type="button" className="text-left rounded-[4px] border border-line-strong hover:border-action hover:bg-action-soft px-3 py-2.5"
                           onClick={() => setForm(f => ({ ...f, email: d.email, password: d.password }))}>
-                    <span className="block text-[13px] font-bold">{d.role}</span>
-                    <span className="block text-[11.5px] text-ink-3 leading-snug">{d.note}</span>
+                    <span className="block font-display text-[17px] font-bold">{d.role}</span>
+                    <span className="block text-[12.5px] text-ink-3 leading-snug">{d.note}</span>
                   </button>
                 ))}
               </div>

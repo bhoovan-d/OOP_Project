@@ -1,16 +1,114 @@
 {
-  "name": "Triage Board",
-  "mode": "operate",
-  "colors": {
-    "ground": "#f4f6f9", "surface": "#ffffff", "sunken": "#eef1f5", "line": "#e1e6ee", "lineStrong": "#c9d1dd",
-    "ink": "#0e1726", "ink2": "#3c4a60", "ink3": "#5b687c",
-    "rail": "#0f2341", "rail2": "#1a3358", "railInk": "#c7d2e4",
-    "action": "#1f4fd1", "actionHover": "#1a43b3", "actionSoft": "#e8eefc",
-    "p1": "#d42a1e", "p2": "#e2620f", "p3": "#c98a04", "p4": "#2b8a3e",
-    "ok": "#2b8a3e", "warn": "#b7790a", "bad": "#c8261b",
-    "chart": { "opened": "#1f4fd1", "resolved": "#0e9384", "single": "#1a3358" }
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-22T00:00:00Z",
+  "title": "Design System: I-ITSM",
+  "extensions": {
+    "colorMeta": {
+      "board": { "role": "primary", "displayName": "Board Green", "canonical": "#0f3b2e", "tonalRamp": ["#06190f", "#0b2a20", "#0f3b2e", "#14553f", "#23664f", "#4f8b73", "#9fc4b2", "#e2efe7"] },
+      "board-2": { "role": "primary", "displayName": "Board Green, lighter lane", "canonical": "#14553f" },
+      "chalk": { "role": "neutral", "displayName": "Chalk", "canonical": "#c4dccf" },
+      "plate": { "role": "neutral", "displayName": "Plate White", "canonical": "#f7f7f2" },
+      "ground": { "role": "neutral", "displayName": "Grass Ground", "canonical": "#e9eee8", "tonalRamp": ["#111814", "#33403a", "#56635c", "#b4c0b7", "#d8dfd8", "#e9eee8", "#f1f4f0", "#ffffff"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#111814" },
+      "p1": { "role": "secondary", "displayName": "Priority Red", "canonical": "#c62a1e", "tonalRamp": ["#5a120c", "#8a1c13", "#c62a1e", "#de5a4f", "#ee958e", "#f7c7c2", "#fbe8e6", "#fdf5f4"] },
+      "p2": { "role": "secondary", "displayName": "Priority Orange", "canonical": "#d9650c" },
+      "p3": { "role": "secondary", "displayName": "Priority Amber", "canonical": "#c79100" },
+      "p4": { "role": "secondary", "displayName": "Priority Blue", "canonical": "#2f6db5" }
+    },
+    "typographyMeta": {
+      "plate": { "displayName": "Plate numerals", "purpose": "Hung board counts and the reversed plate head; tabular." },
+      "display": { "displayName": "Display", "purpose": "Page titles, incident numbers and incident titles." },
+      "title": { "displayName": "Title", "purpose": "Panel and dialog titles." },
+      "body": { "displayName": "Body", "purpose": "Tables, forms, descriptions." },
+      "label": { "displayName": "Label", "purpose": "Plate captions, table heads, sidebar section labels; uppercase, tracked." }
+    },
+    "shadows": [
+      { "name": "plate-hang", "value": "0 1px 0 rgba(0,0,0,.25), 0 3px 6px -3px rgba(0,0,0,.35)", "purpose": "A tin plate hanging on the board." },
+      { "name": "lift", "value": "0 24px 60px -12px rgba(8,30,22,.45)", "purpose": "Dialogs and popovers over a 50% board backdrop." }
+    ],
+    "motion": [
+      { "name": "step", "value": "steps(2, jump-none)", "purpose": "Every transition; the app never eases." },
+      { "name": "plate-flip", "value": "240ms step-end (visible, edge-on at 35%, visible at 70%)", "purpose": "A plate's value changing." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
   },
-  "fonts": { "sans": "Manrope Variable", "mono": "JetBrains Mono" },
-  "radius": { "control": 6, "panel": 8, "tag": "3px 3px 3px 9px" },
-  "sizes": { "rail": 248, "topbar": 64, "control": 36, "controlSm": 32 }
+  "components": [
+    {
+      "name": "Primary Button", "kind": "button", "refersTo": "button-primary",
+      "description": "Board-green action; one per action bar.",
+      "html": "<button class=\"ds-btn-primary\">Report incident</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:0;border-radius:4px;background:#14553f;color:#fff;font:600 14px Barlow,sans-serif;cursor:pointer;transition:background .1s steps(2,jump-none)}.ds-btn-primary:hover{background:#0f3b2e}.ds-btn-primary:focus-visible{outline:2px solid #14553f;outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button", "kind": "button", "refersTo": "button-secondary",
+      "description": "White with a strong hairline.",
+      "html": "<button class=\"ds-btn-secondary\">Reassign</button>",
+      "css": ".ds-btn-secondary{height:36px;padding:0 14px;border:1px solid #b4c0b7;border-radius:4px;background:#fff;color:#111814;font:600 14px Barlow,sans-serif;cursor:pointer}.ds-btn-secondary:hover{background:#f1f4f0;border-color:#56635c}.ds-btn-secondary:focus-visible{outline:2px solid #14553f;outline-offset:2px}"
+    },
+    {
+      "name": "Input", "kind": "input", "refersTo": "input",
+      "description": "Squared field with a green focus ring.",
+      "html": "<input class=\"ds-input\" placeholder=\"Search incidents or jump to INC1042\">",
+      "css": ".ds-input{width:280px;height:36px;padding:0 12px;border:1px solid #b4c0b7;border-radius:4px;background:#fff;color:#111814;font:400 14px Barlow,sans-serif}.ds-input::placeholder{color:#56635c}.ds-input:focus{outline:none;border-color:#14553f;box-shadow:0 0 0 3px rgba(20,85,63,.15)}"
+    },
+    {
+      "name": "Navigation", "kind": "nav", "refersTo": "nav-item-active",
+      "description": "Chalk on board green; the active item hangs as a white plate with a live count.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-on\">Operations</a><a>Incidents <b>16</b></a><a>SLA violations</a></nav>",
+      "css": ".ds-nav{display:flex;flex-direction:column;gap:2px;width:208px;padding:12px;background:#0f3b2e;font:600 14.5px Barlow,sans-serif}.ds-nav a{display:flex;justify-content:space-between;align-items:center;height:40px;padding:0 12px;border-radius:3px;color:#c4dccf;cursor:pointer}.ds-nav a:hover{background:#14553f;color:#fff}.ds-nav a.ds-nav-on{background:#f7f7f2;color:#111814}.ds-nav b{font:700 15px 'Barlow Condensed',sans-serif;background:#f7f7f2;color:#111814;padding:2px 6px;border-radius:2px}"
+    },
+    {
+      "name": "Priority Tag", "kind": "chip",
+      "description": "P1-P4 painted on a squared plate; the only home of the priority colours.",
+      "html": "<span class=\"ds-tag ds-p1\">P1</span> <span class=\"ds-tag ds-p2\">P2</span> <span class=\"ds-tag ds-p3\">P3</span> <span class=\"ds-tag ds-p4\">P4</span>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:2px;font:800 15px 'Barlow Condensed',sans-serif;color:#fff}.ds-p1{background:#c62a1e}.ds-p2{background:#d9650c}.ds-p3{background:#c79100;color:#111814}.ds-p4{background:#2f6db5}"
+    },
+    {
+      "name": "Board with plates", "kind": "custom",
+      "description": "The signature: one reversed plate for what needs attention now, white count plates with chalk captions.",
+      "html": "<div class=\"ds-board\"><div class=\"ds-plate ds-rev\"><div class=\"ds-head\">INC1105</div><div class=\"ds-head\">9d 20h late</div><div class=\"ds-det\"><b>Major incident</b>&nbsp;· Payment Gateway</div></div><div><div class=\"ds-plate\"><span class=\"ds-num\">16</span></div><div class=\"ds-cap\">Open</div></div><div><div class=\"ds-plate\"><span class=\"ds-num\" style=\"color:#c62a1e\">4</span></div><div class=\"ds-cap\">Critical</div></div></div>",
+      "css": ".ds-board{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:12px;padding:16px;background:#0f3b2e;border-radius:6px;font-family:Barlow,sans-serif}.ds-plate{position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-height:70px;padding:16px 12px 6px;background:#f7f7f2;color:#111814;border-radius:2px;box-shadow:0 1px 0 rgba(0,0,0,.25),0 3px 6px -3px rgba(0,0,0,.35)}.ds-plate:before,.ds-plate:after{content:'';position:absolute;top:6px;width:5px;height:5px;border-radius:50%;background:#0f3b2e}.ds-plate:before{left:7px}.ds-plate:after{right:7px}.ds-rev{background:#111814;color:#fff;align-items:flex-start;padding:20px 16px 12px}.ds-rev:before,.ds-rev:after{background:#14553f}.ds-num{font:800 52px/.9 'Barlow Condensed',sans-serif}.ds-head{font:800 32px/1 'Barlow Condensed',sans-serif}.ds-det{margin-top:8px;font-size:13.5px;color:#cfd9d3}.ds-det b{color:#ff9c92}.ds-cap{margin-top:8px;text-align:center;font:600 11.5px Barlow,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#c4dccf}"
+    },
+    {
+      "name": "SLA ball slots", "kind": "custom",
+      "description": "Twelve slots in two overs of six; filled is time used; countdown reads 'late' when overdue.",
+      "html": "<span class=\"ds-sla\"><i class=\"u\"></i><i class=\"u\"></i><i class=\"u\"></i><i class=\"u\"></i><i class=\"u\"></i><i class=\"u\"></i><i class=\"u g\"></i><i></i><i></i><i></i><i></i><i></i><b>2h 10m</b></span>",
+      "css": ".ds-sla{display:inline-flex;align-items:center;gap:3px;font-family:'Barlow Condensed',sans-serif}.ds-sla i{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(20,85,63,.55);box-sizing:border-box}.ds-sla i.u{background:#14553f;border-color:#14553f}.ds-sla i.g{margin-left:4px}.ds-sla b{margin-left:10px;font:700 16px 'Barlow Condensed',sans-serif;color:#111814}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Scoreboard",
+    "overview": "I-ITSM is laid out like a hand-operated cricket ground scoreboard. The shell is painted board green; every live count, countdown and incident number hangs on it as a white tin plate with two pin holes, set in heavy condensed numerals that read from the back of a lecture hall. The working surfaces sit on a pale grass-grey ground in plain white panels, so the board carries the drama and the work stays calm.",
+    "keyCharacteristics": [
+      "Board green shell and boards; white hung plates for every live number",
+      "One type family: Barlow for reading, Barlow Condensed for numbers, headings and plates",
+      "One reversed plate per screen for what needs attention now",
+      "SLA time drawn as twelve ball slots that fill as the window is used",
+      "Stepped, two-frame state changes; no easing anywhere"
+    ],
+    "rules": [
+      { "name": "The Reserved Paint Rule", "body": "Priority colours appear only on P-tags and SLA danger states.", "section": "colors" },
+      { "name": "The One Reversed Plate Rule", "body": "Each screen hangs exactly one dark plate, and it always names the most urgent single item for that role.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "No third face. Numbers, incident IDs, countdowns and scores use Barlow Condensed with tabular figures; there is no monospace.", "section": "typography" }
+    ],
+    "dos": [
+      "Do hang every live number as a plate on a board, with a chalk caption under it.",
+      "Do give each screen one reversed plate for the most urgent single item, and only one.",
+      "Do set numbers, incident IDs and countdowns in Barlow Condensed with tabular figures.",
+      "Do change state in stepped frames; flip plates on new values."
+    ],
+    "donts": [
+      "Don't use P1–P4 colours for anything but priority tags and SLA danger.",
+      "Don't add eased transitions, fades or animated chart entrances.",
+      "Don't reintroduce rounded pills, a monospace face, or the old navy rail.",
+      "Don't wrap content in same-size icon cards; hierarchy comes from scale, not boxes.",
+      "Don't tag healthy things: only outages and degraded services get a filled marker.",
+      "Don't put a caps caption above a plate's headline; lead words go in the detail line below it."
+    ]
+  }
 }

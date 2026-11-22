@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUp, Copy, Siren } from 'lucide-react'
 import type { Summary } from '../lib/api'
 import { ago } from '../lib/format'
 import { useLive, useNow } from '../lib/live'
-import { SlaStrip, StatusBadge, TriageTag, cx } from './ui'
+import { SlaStrip, StatusBadge, PriorityTag, cx } from './ui'
 
 export type SortState = { sort: string; dir: 'asc' | 'desc' }
 
@@ -26,18 +26,46 @@ export function IncidentTable({ rows, cols = ['service', 'assignee'], sort, onSo
     )
   }
   return (
-    <div className="overflow-x-auto">
+    <>
+    <ul className="md:hidden divide-y divide-line" aria-label="Incidents">
+      {rows.map(r => {
+        const open = !['RESOLVED', 'VERIFIED', 'CLOSED', 'CANCELLED'].includes(r.status)
+        return (
+          <li key={r.id} className={cx(lastIncidentId === r.id && 'row-flash')}>
+            <Link to={`/incidents/${r.id}`} className="block px-4 py-3 hover:bg-sunken">
+              <span className="flex items-center gap-2 flex-wrap">
+                <PriorityTag priority={r.priority} />
+                <span className="mono text-[17px] font-bold leading-none">{r.number}</span>
+                <StatusBadge status={r.status} />
+                {r.escalationLevel !== 'NONE' && open && <span className="chip h-5 bg-sunken text-ink-2 border-line-strong"><Siren className="size-3" />Escalated</span>}
+              </span>
+              <span className="block font-semibold text-ink mt-1.5">{r.title}</span>
+              <span className="block text-[13px] text-ink-3 truncate">
+                {[cols.includes('service') && r.service?.name, cols.includes('category') && r.category?.name, cols.includes('reporter') && r.reporter?.name,
+                  cols.includes('assignee') && (r.assignee?.name ?? 'Unassigned')].filter(Boolean).join(' · ')}
+              </span>
+              <span className="block mt-2">
+                {open
+                  ? <SlaStrip start={r.createdAt} due={r.resolutionDueAt} status={r.slaStatus} paused={r.status === 'AWAITING_INFO'} />
+                  : <span className={cx('text-[13px] font-semibold', r.breached ? 'text-bad' : 'text-ok')}>{r.status === 'CANCELLED' ? '—' : r.breached ? 'SLA missed' : 'Within SLA'}</span>}
+              </span>
+            </Link>
+          </li>
+        )
+      })}
+    </ul>
+    <div className="hidden md:block overflow-x-auto">
       <table className="w-full border-collapse min-w-[860px]">
         <thead>
           <tr>
-            {header('priority', 'Tag', 'w-[72px]')}
+            {header('priority', 'Pri', 'w-[64px]')}
             <th className="th">Incident</th>
             {header('status', 'Status', 'w-[170px]')}
             {cols.includes('service') && <th className="th w-[170px]">Service</th>}
             {cols.includes('category') && <th className="th w-[130px]">Category</th>}
             {cols.includes('reporter') && <th className="th w-[150px]">Reporter</th>}
             {cols.includes('assignee') && <th className="th w-[150px]">Technician</th>}
-            {header('resolutionDueAt', 'Time left', 'w-[160px]')}
+            {header('resolutionDueAt', 'SLA remaining', 'w-[244px]')}
             {header('createdAt', 'Opened', 'w-[96px]')}
           </tr>
         </thead>
@@ -46,35 +74,36 @@ export function IncidentTable({ rows, cols = ['service', 'assignee'], sort, onSo
             const open = !['RESOLVED', 'VERIFIED', 'CLOSED', 'CANCELLED'].includes(r.status)
             return (
               <tr key={r.id} className={cx('group hover:bg-sunken/60', lastIncidentId === r.id && 'row-flash')}>
-                <td className="td"><TriageTag priority={r.priority} /></td>
+                <td className="td"><PriorityTag priority={r.priority} /></td>
                 <td className="td min-w-0">
                   <Link to={`/incidents/${r.id}`} className="block min-w-0 focus-visible:outline-offset-4">
                     <span className="flex items-center gap-2">
-                      <span className="mono text-[12px] font-semibold text-ink-3 group-hover:text-action">{r.number}</span>
+                      <span className="mono text-[17px] font-bold leading-none text-ink group-hover:text-action">{r.number}</span>
                       {r.escalationLevel !== 'NONE' && open && (
-                        <span className="chip h-5 bg-p1-soft text-bad border-bad/25" title={`Escalated to ${r.escalationLevel.replace('_', ' ').toLowerCase()}`}><Siren className="size-3" />Escalated</span>
+                        <span className="chip h-5 bg-sunken text-ink-2 border-line-strong" title={`Escalated to ${r.escalationLevel.replace('_', ' ').toLowerCase()}`}><Siren className="size-3" />Escalated</span>
                       )}
                       {r.duplicateOfNumber && <span className="chip h-5 bg-sunken text-ink-3 border-line" title={`Linked to ${r.duplicateOfNumber}`}><Copy className="size-3" />{r.duplicateOfNumber}</span>}
                     </span>
-                    <span className="block font-semibold text-ink truncate max-w-[52ch] group-hover:underline">{r.title}</span>
+                    <span className="block font-semibold text-ink truncate max-w-[52ch] mt-0.5 group-hover:underline">{r.title}</span>
                   </Link>
                 </td>
                 <td className="td"><StatusBadge status={r.status} /></td>
-                {cols.includes('service') && <td className="td text-ink-2 text-[13px] truncate max-w-[170px]">{r.service?.name}</td>}
-                {cols.includes('category') && <td className="td text-ink-2 text-[13px]">{r.category?.name ?? '—'}</td>}
-                {cols.includes('reporter') && <td className="td text-ink-2 text-[13px] truncate">{r.reporter?.name}</td>}
-                {cols.includes('assignee') && <td className="td text-[13px] truncate">{r.assignee?.name ?? <span className="text-p2 font-semibold">Unassigned</span>}</td>}
+                {cols.includes('service') && <td className="td text-ink-2 text-[13.5px] truncate max-w-[170px]">{r.service?.name}</td>}
+                {cols.includes('category') && <td className="td text-ink-2 text-[13.5px]">{r.category?.name ?? '—'}</td>}
+                {cols.includes('reporter') && <td className="td text-ink-2 text-[13.5px] truncate">{r.reporter?.name}</td>}
+                {cols.includes('assignee') && <td className="td text-[13.5px] truncate">{r.assignee?.name ?? <span className="text-warn font-semibold">Unassigned</span>}</td>}
                 <td className="td">
                   {open
                     ? <SlaStrip compact start={r.createdAt} due={r.resolutionDueAt} status={r.slaStatus} paused={r.status === 'AWAITING_INFO'} />
-                    : <span className={cx('text-[12.5px] font-semibold', r.breached ? 'text-bad' : 'text-ok')}>{r.status === 'CANCELLED' ? '—' : r.breached ? 'SLA missed' : 'Within SLA'}</span>}
+                    : <span className={cx('text-[13px] font-semibold', r.breached ? 'text-bad' : 'text-ok')}>{r.status === 'CANCELLED' ? '—' : r.breached ? 'SLA missed' : 'Within SLA'}</span>}
                 </td>
-                <td className="td text-ink-3 text-[12.5px] tnum whitespace-nowrap">{ago(r.createdAt, now)}</td>
+                <td className="td text-ink-3 text-[13px] tnum whitespace-nowrap">{ago(r.createdAt, now)}</td>
               </tr>
             )
           })}
         </tbody>
       </table>
     </div>
+    </>
   )
 }

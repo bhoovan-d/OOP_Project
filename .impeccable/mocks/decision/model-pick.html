@@ -1,0 +1,82 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>I-ITSM Metro Line</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d2433;--ink3:#626b7d;--line:#e2e5ea;--ground:#f2f3f5;--purple:#7a2f8f;--blue:#0b6fb8;--red:#e0262f;--amber:#f4a300;--green:#1f9d55;--p1:#e0262f;--p2:#e8650e;--p3:#d49a00;--p4:#1f9d55}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 "Hanken Grotesk",sans-serif;color:var(--ink);background:var(--ground)}
+header{height:60px;background:var(--ink);color:#fff;display:flex;align-items:center;padding:0 28px;gap:28px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.logo i{width:26px;height:26px;border-radius:50%;border:5px solid var(--purple);background:#fff}
+nav{display:flex;gap:4px}
+nav span{padding:8px 14px;border-radius:999px;font-weight:600;color:#c8cdd8}
+nav span.on{background:#fff;color:var(--ink)}
+.search{margin-left:auto;width:320px;height:34px;border-radius:999px;background:#2c3548;color:#9aa3b5;padding:0 14px;display:flex;align-items:center}
+.btn{height:34px;padding:0 16px;border-radius:999px;background:var(--purple);color:#fff;font-weight:700;display:flex;align-items:center}
+.wrap{padding:22px 28px;display:flex;flex-direction:column;gap:18px}
+h1{font-size:24px;font-weight:800}
+.sub{color:var(--ink3);font-size:13px}
+.map{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px 34px 20px;position:relative}
+.maph{display:flex;justify-content:space-between;font-weight:700;margin-bottom:18px}
+.maph small{color:var(--ink3);font-weight:500}
+.line{position:relative;height:120px}
+.track{position:absolute;left:20px;right:20px;top:30px;height:10px;border-radius:5px;background:var(--purple)}
+.stations{position:absolute;left:0;right:0;top:15px;display:flex;justify-content:space-between}
+.st{display:flex;flex-direction:column;align-items:center;width:110px;text-align:center}
+.st .o{width:40px;height:40px;border-radius:50%;background:#fff;border:6px solid var(--purple);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.st .o.hot{border-color:var(--red);color:var(--red)}
+.st .o.x{width:46px;height:46px;border:6px solid var(--ink);margin-top:-3px}
+.st b{margin-top:10px;font-size:13px}
+.st small{color:var(--ink3);font-size:11.5px}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ph{padding:14px 18px;border-bottom:1px solid var(--line);font-weight:800;display:flex;justify-content:space-between}
+.ph small{font-weight:500;color:var(--ink3)}
+.row{display:grid;grid-template-columns:44px 84px 1fr 220px 70px;align-items:center;gap:10px;padding:11px 18px;border-top:1px solid #eef0f3}
+.tag{width:34px;height:34px;border-radius:50%;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.inc{font-weight:800;font-variant-numeric:tabular-nums}
+.t{font-weight:600}.s{color:var(--ink3);font-size:12.5px}
+.mini{position:relative;height:14px}
+.mini:before{content:"";position:absolute;left:0;right:0;top:6px;height:3px;background:#dfe2e8;border-radius:2px}
+.mini i{position:absolute;top:6px;left:0;height:3px;background:var(--purple);border-radius:2px}
+.mini b{position:absolute;top:1px;width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid var(--purple)}
+.left{font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+.svc{display:flex;align-items:center;gap:12px;padding:11px 18px;border-top:1px solid #eef0f3}
+.svc .c{width:14px;height:14px;border-radius:50%;border:3px solid}
+.svc .n{flex:1;font-weight:600}
+</style></head><body>
+<header><div class="logo"><i></i>I-ITSM</div><nav><span class="on">Network</span><span>Queue</span><span>Incidents</span><span>Services</span><span>Admin</span></nav><div class="search">Search or jump to INC…</div><span class="btn">+ Report</span></header>
+<div class="wrap">
+ <div><h1>Incident network</h1><div class="sub">Sunday 22 Nov · live · 14 incidents on the line</div></div>
+ <div class="map">
+  <div class="maph">Lifecycle line <small>incidents currently at each station</small></div>
+  <div class="line"><div class="track"></div>
+   <div class="stations">
+    <div class="st"><div class="o">2</div><b>Reported</b><small>new</small></div>
+    <div class="st"><div class="o">3</div><b>Assigned</b><small>awaiting ack</small></div>
+    <div class="st"><div class="o hot">5</div><b>Investigating</b><small>1 breached</small></div>
+    <div class="st"><div class="o">1</div><b>Waiting</b><small>on reporter</small></div>
+    <div class="st"><div class="o">2</div><b>Resolved</b><small>to verify</small></div>
+    <div class="st"><div class="o x">✓</div><b>Closed</b><small>11 today</small></div>
+   </div>
+  </div>
+ </div>
+ <div class="grid">
+  <div class="panel"><div class="ph">Trains on the line <small>by time left</small></div>
+   <div class="row"><span class="tag" style="background:var(--p1)">P1</span><span class="inc">INC1104</span><div><div class="t">Payment gateway timeouts</div><div class="s">Payment Gateway · Neha S.</div></div><div class="mini"><i style="width:55%"></i><b style="left:52%;border-color:var(--red)"></b></div><span class="left" style="color:var(--red)">07:42</span></div>
+   <div class="row"><span class="tag" style="background:var(--p2)">P2</span><span class="inc">INC1101</span><div><div class="t">Wi-Fi drops in Library 2nd floor</div><div class="s">Campus Wi-Fi · Arjun R.</div></div><div class="mini"><i style="width:30%"></i><b style="left:28%"></b></div><span class="left">48m</span></div>
+   <div class="row"><span class="tag" style="background:var(--p2)">P2</span><span class="inc">INC1097</span><div><div class="t">Payroll export fails for November</div><div class="s">ERP / Payroll · Priya K.</div></div><div class="mini"><i style="width:68%"></i><b style="left:65%"></b></div><span class="left">2h 10m</span></div>
+   <div class="row"><span class="tag" style="background:var(--p3)">P3</span><span class="inc">INC1095</span><div><div class="t">Moodle quiz page loads slowly</div><div class="s">LMS · Kavya D.</div></div><div class="mini"><i style="width:55%"></i><b style="left:52%"></b></div><span class="left">5h 32m</span></div>
+   <div class="row"><span class="tag" style="background:var(--p4)">P4</span><span class="inc">INC1090</span><div><div class="t">Projector remote missing, F-104</div><div class="s">Classroom AV · unassigned</div></div><div class="mini"><i style="width:4%"></i><b style="left:0"></b></div><span class="left">2d 4h</span></div>
+  </div>
+  <div class="panel"><div class="ph">Service lines <small>12 services</small></div>
+   <div class="svc"><span class="c" style="border-color:var(--red)"></span><span class="n">Payment Gateway</span><span class="s" style="color:var(--red);font-weight:700">Suspended</span></div>
+   <div class="svc"><span class="c" style="border-color:var(--amber)"></span><span class="n">Campus Wi-Fi</span><span class="s">Delays</span></div>
+   <div class="svc"><span class="c" style="border-color:var(--green)"></span><span class="n">ERP / Payroll</span><span class="s">Good service</span></div>
+   <div class="svc"><span class="c" style="border-color:var(--green)"></span><span class="n">Email &amp; Calendar</span><span class="s">Good service</span></div>
+   <div class="svc"><span class="c" style="border-color:var(--green)"></span><span class="n">LMS</span><span class="s">Good service</span></div>
+   <div class="svc"><span class="c" style="border-color:var(--green)"></span><span class="n">VPN</span><span class="s">Good service</span></div>
+  </div>
+ </div>
+</div>
+</body></html>

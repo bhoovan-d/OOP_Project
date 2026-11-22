@@ -1,0 +1,59 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>I-ITSM Standard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111827;--ink2:#374151;--ink3:#6b7280;--line:#e5e7eb;--bg:#f6f7f9;--acc:#4f46e5}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font:14px/1.5 Inter,sans-serif;color:var(--ink);background:var(--bg);display:grid;grid-template-columns:240px 1fr}
+aside{background:#fff;border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:2px}
+.brand{font-weight:700;font-size:16px;padding:0 10px 18px;display:flex;gap:8px;align-items:center}
+.brand i{width:22px;height:22px;border-radius:6px;background:var(--acc)}
+.nav{padding:8px 10px;border-radius:6px;color:var(--ink2);font-weight:500;display:flex;justify-content:space-between}
+.nav.on{background:#eef2ff;color:var(--acc)}
+.nav em{font-style:normal;font-size:12px;background:#f3f4f6;border-radius:999px;padding:0 8px}
+main{display:flex;flex-direction:column}
+header{height:60px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 28px;gap:16px}
+.search{width:380px;height:36px;border:1px solid var(--line);border-radius:8px;padding:0 12px;display:flex;align-items:center;color:var(--ink3)}
+.btn{margin-left:auto;height:36px;padding:0 14px;border-radius:8px;background:var(--acc);color:#fff;font-weight:600;display:flex;align-items:center}
+.c{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
+h1{font-size:22px;font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+.kpi span{color:var(--ink3);font-size:13px}.kpi b{display:block;font-size:28px;font-weight:700;margin-top:4px}
+.kpi small{color:#059669;font-weight:600;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ch{padding:14px 18px;font-weight:600;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.ch small{color:var(--ink3);font-weight:400}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;font-weight:500;color:var(--ink3);text-align:left;padding:10px 18px;background:#f9fafb}
+td{padding:12px 18px;border-top:1px solid var(--line)}
+.pill{font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px}
+.svc{display:flex;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--line)}
+</style></head><body>
+<aside><div class="brand"><i></i>I-ITSM</div><div class="nav on">Dashboard</div><div class="nav">Incidents <em>14</em></div><div class="nav">My queue</div><div class="nav">Services</div><div class="nav">Reports</div><div class="nav">Settings</div></aside>
+<main>
+ <header><div class="search">Search incidents…</div><span class="btn">New incident</span></header>
+ <div class="c">
+  <h1>Dashboard</h1>
+  <div class="kpis"><div class="kpi"><span>Open incidents</span><b>14</b><small>−3 vs last week</small></div><div class="kpi"><span>At risk</span><b>3</b></div><div class="kpi"><span>Breached</span><b>2</b></div><div class="kpi"><span>MTTR</span><b>4.2h</b><small>−0.6h</small></div><div class="kpi"><span>SLA compliance</span><b>93%</b></div></div>
+  <div class="grid">
+   <div class="card"><div class="ch">Open incidents <small>View all</small></div>
+    <table><tr><th>ID</th><th>Title</th><th>Priority</th><th>Status</th><th>Assignee</th><th>SLA</th></tr>
+     <tr><td>INC1104</td><td>Payment gateway timeouts</td><td><span class="pill" style="background:#fee2e2;color:#b91c1c">Critical</span></td><td><span class="pill" style="background:#e0e7ff;color:#4338ca">In progress</span></td><td>Neha S.</td><td>7m</td></tr>
+     <tr><td>INC1101</td><td>Wi-Fi drops in Library 2nd floor</td><td><span class="pill" style="background:#ffedd5;color:#c2410c">High</span></td><td><span class="pill" style="background:#f3f4f6;color:#374151">Acknowledged</span></td><td>Arjun R.</td><td>48m</td></tr>
+     <tr><td>INC1097</td><td>Payroll export fails for November</td><td><span class="pill" style="background:#ffedd5;color:#c2410c">High</span></td><td><span class="pill" style="background:#fef9c3;color:#a16207">Pending</span></td><td>Priya K.</td><td>2h 10m</td></tr>
+     <tr><td>INC1095</td><td>Moodle quiz page loads slowly</td><td><span class="pill" style="background:#fef9c3;color:#a16207">Medium</span></td><td><span class="pill" style="background:#e0e7ff;color:#4338ca">In progress</span></td><td>Kavya D.</td><td>5h 32m</td></tr>
+     <tr><td>INC1090</td><td>Projector remote missing, F-104</td><td><span class="pill" style="background:#dcfce7;color:#15803d">Low</span></td><td><span class="pill" style="background:#f3f4f6;color:#374151">New</span></td><td>—</td><td>2d 4h</td></tr>
+    </table></div>
+   <div class="card"><div class="ch">Service status</div>
+    <div class="svc"><span>Payment Gateway</span><span class="pill" style="background:#fee2e2;color:#b91c1c">Outage</span></div>
+    <div class="svc"><span>Campus Wi-Fi</span><span class="pill" style="background:#fef9c3;color:#a16207">Degraded</span></div>
+    <div class="svc"><span>ERP / Payroll</span><span class="pill" style="background:#dcfce7;color:#15803d">Operational</span></div>
+    <div class="svc"><span>Email &amp; Calendar</span><span class="pill" style="background:#dcfce7;color:#15803d">Operational</span></div>
+    <div class="svc"><span>LMS</span><span class="pill" style="background:#dcfce7;color:#15803d">Operational</span></div>
+   </div>
+  </div>
+ </div>
+</main>
+</body></html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>I-ITSM Scoreboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--board:#0f3b2e;--board2:#14553f;--boardline:#1e6a50;--plate:#f7f7f2;--ground:#e9eee8;--ink:#111814;--ink2:#3d4a43;--ink3:#64716a;--line:#d3dbd4;--p1:#c62a1e;--p2:#dd6b10;--p3:#c79100;--p4:#2f6db5;--chalk:#b9d3c6}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 Barlow,sans-serif;color:var(--ink);background:var(--ground);display:grid;grid-template-columns:232px 1fr}
+.cond{font-family:"Barlow Condensed",sans-serif}
+aside{background:var(--board);color:var(--chalk);padding:20px 14px;display:flex;flex-direction:column;gap:4px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
+.brand b{background:var(--plate);color:var(--ink);font:800 22px/1 "Barlow Condensed";padding:6px 8px 4px;border-radius:2px}
+.brand span{color:#fff;font-weight:600;font-size:15px}
+.nav{padding:9px 12px;border-radius:4px;font-weight:500;display:flex;justify-content:space-between}
+.nav.on{background:var(--board2);color:#fff;box-shadow:inset 3px 0 0 var(--plate)}
+.nav i{font-style:normal;font:700 13px "Barlow Condensed";background:var(--plate);color:var(--ink);padding:0 6px;border-radius:2px}
+.navhead{font:600 11px Barlow;letter-spacing:.12em;text-transform:uppercase;opacity:.6;padding:18px 12px 6px}
+.me{margin-top:auto;padding:12px;border-top:1px solid var(--boardline);font-size:13px}
+main{display:flex;flex-direction:column;min-width:0}
+header{height:60px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 28px}
+.search{flex:1;max-width:420px;height:36px;border:1px solid var(--line);border-radius:4px;padding:0 12px;display:flex;align-items:center;color:var(--ink3)}
+.live{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--board2)}
+.live:before{content:"";width:8px;height:8px;border-radius:50%;background:#2ea86b}
+.btn{height:36px;padding:0 16px;border-radius:4px;background:var(--board2);color:#fff;font-weight:600;display:flex;align-items:center;margin-left:auto}
+.content{padding:22px 28px;display:flex;flex-direction:column;gap:18px}
+h1{font:700 26px/1 "Barlow Condensed";letter-spacing:.01em}
+.sub{color:var(--ink3);font-size:13px;margin-top:4px}
+.board{background:var(--board);border-radius:6px;padding:18px 20px 14px;display:grid;grid-template-columns:300px repeat(5,1fr);gap:14px;align-items:stretch}
+.plate{background:var(--plate);border-radius:2px;position:relative;padding:12px 14px 8px;text-align:center}
+.plate:before,.plate:after{content:"";position:absolute;top:6px;width:5px;height:5px;border-radius:50%;background:var(--board)}
+.plate:before{left:7px}.plate:after{right:7px}
+.num{font:800 64px/0.9 "Barlow Condensed";font-variant-numeric:tabular-nums}
+.lab{font:600 11px Barlow;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk);text-align:center;margin-top:8px}
+.rev{background:var(--ink);color:#fff;text-align:left;padding:12px 16px}
+.rev:before,.rev:after{background:var(--board)}
+.rev .k{font:600 11px Barlow;letter-spacing:.14em;color:#ff8b80}
+.rev .t{font:800 40px/1 "Barlow Condensed";margin-top:4px}
+.rev .d{font-size:13px;color:#cfd8d3;margin-top:2px}
+.cols{display:grid;grid-template-columns:1fr 340px;gap:18px;min-height:0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:6px}
+.ph{height:46px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;font:700 17px "Barlow Condensed";letter-spacing:.02em;gap:10px}
+.ph small{font:500 12px Barlow;color:var(--ink3)}
+table{width:100%;border-collapse:collapse}
+th{font:600 11px Barlow;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:9px 12px;background:#f3f6f3}
+td{padding:10px 12px;border-top:1px solid #edf1ed;vertical-align:middle}
+.tag{display:inline-block;font:800 15px/1 "Barlow Condensed";padding:5px 7px 4px;border-radius:2px;color:#fff}
+.t1{background:var(--p1)}.t2{background:var(--p2)}.t3{background:var(--p3);color:var(--ink)}.t4{background:var(--p4)}
+.inc{font:700 16px "Barlow Condensed";font-variant-numeric:tabular-nums}
+.ttl{font-weight:600}.svc{color:var(--ink3);font-size:12.5px}
+.balls{display:flex;gap:3px;align-items:center}
+.balls b{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--board2)}
+.balls b.u{background:var(--board2)}
+.balls.r b{border-color:var(--p1)}.balls.r b.u{background:var(--p1)}
+.balls.a b{border-color:var(--p3)}.balls.a b.u{background:var(--p3)}
+.left{font:700 17px "Barlow Condensed";font-variant-numeric:tabular-nums;margin-left:8px;min-width:54px}
+.st{font:600 12px Barlow;padding:3px 8px;border-radius:2px;background:#eef2ee;color:var(--ink2)}
+.svcrow{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid #edf1ed}
+.dot{width:10px;height:10px;border-radius:2px}
+.svcrow .n{flex:1;font-weight:600}
+.svcrow .c{font:700 18px "Barlow Condensed";background:var(--ground);padding:1px 8px;border-radius:2px;min-width:30px;text-align:center}
+</style></head><body>
+<aside>
+ <div class="brand"><b>I-ITSM</b><span>Service Desk</span></div>
+ <div class="navhead">Operations</div>
+ <div class="nav on">Dashboard</div>
+ <div class="nav">Triage queue <i>14</i></div>
+ <div class="nav">All incidents</div>
+ <div class="nav">Service health</div>
+ <div class="navhead">Administration</div>
+ <div class="nav">Users &amp; technicians</div>
+ <div class="nav">SLA policies</div>
+ <div class="nav">Audit trail</div>
+ <div class="me">Asha Menon<br><span style="opacity:.7">IT Manager</span></div>
+</aside>
+<main>
+ <header><div class="search">Search incidents or jump to INC number</div><span class="live">Live</span><span>🔔</span><span class="btn">+ Report incident</span></header>
+ <div class="content">
+  <div><h1>Operations board</h1><div class="sub">Sunday 22 Nov · updated live · 8 technicians on shift</div></div>
+  <div class="board">
+   <div class="plate rev"><div class="k">NEEDS ATTENTION NOW · P1</div><div class="t">INC1104 · 07:42 left</div><div class="d">Payment gateway timeouts · 3 linked reports · Neha S.</div></div>
+   <div><div class="plate"><div class="num">14</div></div><div class="lab">Open</div></div>
+   <div><div class="plate"><div class="num">3</div></div><div class="lab">At risk</div></div>
+   <div><div class="plate"><div class="num" style="color:var(--p1)">2</div></div><div class="lab">Breached</div></div>
+   <div><div class="plate"><div class="num">4.2<span style="font-size:30px">h</span></div></div><div class="lab">MTTR · 7 days</div></div>
+   <div><div class="plate"><div class="num">93<span style="font-size:30px">%</span></div></div><div class="lab">SLA met</div></div>
+  </div>
+  <div class="cols">
+   <div class="panel">
+    <div class="ph">Triage queue <small>sorted by time left</small></div>
+    <table><tr><th>Pri</th><th>Incident</th><th>Title · service</th><th>Assignee</th><th>Status</th><th>SLA remaining</th></tr>
+     <tr><td><span class="tag t1">P1</span></td><td class="inc">INC1104</td><td><div class="ttl">Payment gateway timeouts</div><div class="svc">Payment Gateway</div></td><td>Neha S.</td><td><span class="st">In progress</span></td><td><div class="balls r"><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b></b><b></b><span class="left">07:42</span></div></td></tr>
+     <tr><td><span class="tag t2">P2</span></td><td class="inc">INC1101</td><td><div class="ttl">Wi-Fi drops in Library 2nd floor</div><div class="svc">Campus Wi-Fi</div></td><td>Arjun R.</td><td><span class="st">Acknowledged</span></td><td><div class="balls a"><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b></b><b></b><b></b><span class="left">48m</span></div></td></tr>
+     <tr><td><span class="tag t2">P2</span></td><td class="inc">INC1097</td><td><div class="ttl">Payroll export fails for November</div><div class="svc">ERP / Payroll</div></td><td>Priya K.</td><td><span class="st">Waiting on reporter</span></td><td><div class="balls"><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b class="u"></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><span class="left">2h 10m</span></div></td></tr>
+     <tr><td><span class="tag t3">P3</span></td><td class="inc">INC1095</td><td><div class="ttl">Moodle quiz page loads slowly</div><div class="svc">LMS</div></td><td>Kavya D.</td><td><span class="st">In progress</span></td><td><div class="balls"><b class="u"></b><b class="u"></b><b class="u"></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><span class="left">5h 32m</span></div></td></tr>
+     <tr><td><span class="tag t4">P4</span></td><td class="inc">INC1090</td><td><div class="ttl">Projector remote missing, F-104</div><div class="svc">Classroom AV</div></td><td>Unassigned</td><td><span class="st">New</span></td><td><div class="balls"><b class="u"></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><span class="left">2d 4h</span></div></td></tr>
+    </table>
+   </div>
+   <div class="panel">
+    <div class="ph">Service board <small>12 services</small></div>
+    <div class="svcrow"><span class="dot" style="background:var(--p1)"></span><span class="n">Payment Gateway</span><span style="font-size:12px;color:var(--p1);font-weight:600">Major incident</span><span class="c">4</span></div>
+    <div class="svcrow"><span class="dot" style="background:var(--p3)"></span><span class="n">Campus Wi-Fi</span><span style="font-size:12px;color:#8a6500;font-weight:600">Degraded</span><span class="c">2</span></div>
+    <div class="svcrow"><span class="dot" style="background:#2ea86b"></span><span class="n">ERP / Payroll</span><span style="font-size:12px;color:var(--ink3)">Operational</span><span class="c">1</span></div>
+    <div class="svcrow"><span class="dot" style="background:#2ea86b"></span><span class="n">Email &amp; Calendar</span><span style="font-size:12px;color:var(--ink3)">Operational</span><span class="c">0</span></div>
+    <div class="svcrow"><span class="dot" style="background:#2ea86b"></span><span class="n">LMS</span><span style="font-size:12px;color:var(--ink3)">Operational</span><span class="c">1</span></div>
+    <div class="svcrow"><span class="dot" style="background:#2ea86b"></span><span class="n">VPN</span><span style="font-size:12px;color:var(--ink3)">Operational</span><span class="c">0</span></div>
+   </div>
+  </div>
+ </div>
+</main>
+</body></html>

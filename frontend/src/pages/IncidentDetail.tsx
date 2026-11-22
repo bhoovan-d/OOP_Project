@@ -9,7 +9,7 @@ import { ApiError, api, patch, post, type AuditView, type Detail, type Impact, t
 import { useUser } from '../lib/auth'
 import { useNow } from '../lib/live'
 import { LIFECYCLE, PRIORITY_LABEL, STATUS_LABEL, ago, countdown, fmtDateTime, fmtTime, minutes, titleCase } from '../lib/format'
-import { CapacityBar, Dialog, Empty, ErrorNote, Field, Skeleton, Spinner, StatusBadge, TriageTag, cx } from '../components/ui'
+import { CapacityBar, Dialog, Empty, ErrorNote, Field, Skeleton, Spinner, StatusBadge, PriorityTag, cx } from '../components/ui'
 
 type ActionKey = 'ASSIGN' | 'REQUEST_INFO' | 'PROVIDE_INFO' | 'RESOLVE' | 'REOPEN' | 'CLOSE' | 'CANCEL' | 'MERGE' | 'FEEDBACK' | 'EDIT'
 
@@ -46,18 +46,18 @@ export default function IncidentDetail() {
 
   return (
     <div className="space-y-5">
-      <Link to={staff ? '/incidents' : '/my'} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-3 hover:text-ink"><ArrowLeft className="size-4" />Back to incidents</Link>
+      <Link to={staff ? '/incidents' : '/my'} className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-ink-3 hover:text-ink"><ArrowLeft className="size-4" />Back to incidents</Link>
 
       {/* ---------- header ---------- */}
       <header className="panel p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-2.5">
-          <TriageTag priority={s.priority} size="lg" withLabel />
-          <span className="mono text-[20px] font-semibold text-ink tracking-tight">{s.number}</span>
+          <PriorityTag priority={s.priority} size="lg" withLabel />
+          <span className="font-display text-[34px] leading-none font-extrabold text-ink tabular-nums">{s.number}</span>
           <StatusBadge status={s.status} />
-          {s.escalationLevel !== 'NONE' && d.summary.status !== 'CLOSED' && <span className="chip bg-p1-soft text-bad border-bad/25"><Siren className="size-3.5" />Escalated to {titleCase(s.escalationLevel)}</span>}
+          {s.escalationLevel !== 'NONE' && d.summary.status !== 'CLOSED' && <span className="chip bg-sunken text-ink-2 border-line-strong"><Siren className="size-3.5" />Escalated to {titleCase(s.escalationLevel)}</span>}
         </div>
-        <h1 className="text-[22px] sm:text-[24px] font-extrabold mt-3 leading-tight">{s.title}</h1>
-        <p className="text-ink-3 text-[13px] mt-1.5">
+        <h1 className="font-display text-[28px] sm:text-[32px] font-bold mt-3 leading-[1.08]">{s.title}</h1>
+        <p className="text-ink-3 text-[14px] mt-1.5">
           {s.service?.name} · {s.category?.name}{d.autoCategorized && d.categoryConfidence != null ? ` (auto, ${Math.round(d.categoryConfidence * 100)}%)` : ''} · reported by {d.reporter.name} {ago(s.createdAt)}
         </p>
         <Lifecycle status={s.status} />
@@ -65,7 +65,7 @@ export default function IncidentDetail() {
       </header>
 
       {d.duplicateOf && (
-        <div className="panel px-4 py-3 flex items-center gap-3 text-[13px]">
+        <div className="panel px-4 py-3 flex items-center gap-3 text-[13.5px]">
           <GitMerge className="size-4 text-ink-3 shrink-0" />
           <span>Linked to <Link className="font-semibold text-action hover:underline" to={`/incidents/${d.duplicateOf.id}`}>{d.duplicateOf.number} · {d.duplicateOf.title}</Link>
             {d.duplicateOf.score != null && <span className="text-ink-3"> ({Math.round(d.duplicateOf.score * 100)}% similar)</span>}. Both are handled together.</span>
@@ -73,18 +73,18 @@ export default function IncidentDetail() {
       )}
 
       {user.role === 'EMPLOYEE' && s.status === 'RESOLVED' && can('FEEDBACK') && (
-        <div className="panel p-5 flex flex-wrap items-center gap-4 border-p4/40 bg-p4-soft/40">
+        <div className="panel p-5 flex flex-wrap items-center gap-4 border-ok/40 bg-[#e3f1e8]/60">
           <CircleCheck className="size-6 text-ok" />
-          <div className="flex-1 min-w-[220px]"><div className="font-bold">Is it fixed?</div><div className="text-ink-2 text-[13px]">{d.assignee?.name ?? 'IT'} marked this resolved. Confirm to close it, or reopen it if the problem is still there.</div></div>
+          <div className="flex-1 min-w-[220px]"><div className="font-bold">Is it fixed?</div><div className="text-ink-2 text-[13.5px]">{d.assignee?.name ?? 'IT'} marked this resolved. Confirm to close it, or reopen it if the problem is still there.</div></div>
           <button className="btn-secondary" onClick={() => setDialog('REOPEN')}>Still broken</button>
           <button className="btn-primary" onClick={() => setDialog('FEEDBACK')}><Check className="size-4" />Yes, it's fixed</button>
         </div>
       )}
       {user.role === 'EMPLOYEE' && s.status === 'AWAITING_INFO' && (
-        <div className="panel p-5 flex flex-wrap items-center gap-4 border-[#5b36b0]/30 bg-[#f1ecfd]/50">
-          <MessageSquare className="size-6 text-[#5b36b0]" />
+        <div className="panel p-5 flex flex-wrap items-center gap-4 border-[#553a8f]/30 bg-[#efeaf7]/60">
+          <MessageSquare className="size-6 text-[#553a8f]" />
           <div className="flex-1 min-w-[220px]"><div className="font-bold">{d.assignee?.name ?? 'Your technician'} needs more information</div>
-            <div className="text-ink-2 text-[13px]">{[...d.comments].reverse().find(c => c.type === 'INFO_REQUEST')?.body}</div></div>
+            <div className="text-ink-2 text-[13.5px]">{[...d.comments].reverse().find(c => c.type === 'INFO_REQUEST')?.body}</div></div>
           <button className="btn-primary" onClick={() => setDialog('PROVIDE_INFO')}>Reply</button>
         </div>
       )}
@@ -98,14 +98,14 @@ export default function IncidentDetail() {
           </section>
           {d.resolution && (
             <section className="panel">
-              <div className="panel-head"><span className="panel-title">Resolution</span>{d.resolvedAt && <span className="text-[12px] text-ink-3">{fmtDateTime(d.resolvedAt)}</span>}</div>
+              <div className="panel-head"><span className="panel-title">Resolution</span>{d.resolvedAt && <span className="text-[12.5px] text-ink-3">{fmtDateTime(d.resolvedAt)}</span>}</div>
               <div className="p-4 space-y-2 max-w-[75ch]">
                 <p className="leading-relaxed">{d.resolution}</p>
-                {d.rootCause && <p className="text-[13px] text-ink-3"><span className="font-semibold text-ink-2">Root cause:</span> {d.rootCause}</p>}
+                {d.rootCause && <p className="text-[13.5px] text-ink-3"><span className="font-semibold text-ink-2">Root cause:</span> {d.rootCause}</p>}
                 {d.feedbackRating != null && (
-                  <p className="flex items-center gap-2 text-[13px] pt-1"><Stars value={d.feedbackRating} />{d.feedbackComment && <span className="text-ink-2">“{d.feedbackComment}”</span>}</p>
+                  <p className="flex items-center gap-2 text-[13.5px] pt-1"><Stars value={d.feedbackRating} />{d.feedbackComment && <span className="text-ink-2">“{d.feedbackComment}”</span>}</p>
                 )}
-                {d.closureNotes && <p className="text-[13px] text-ink-3">{d.closureNotes}</p>}
+                {d.closureNotes && <p className="text-[13.5px] text-ink-3">{d.closureNotes}</p>}
               </div>
             </section>
           )}
@@ -129,15 +129,15 @@ export default function IncidentDetail() {
 /* ================================================================================================ */
 
 function Lifecycle({ status }: { status: Status }) {
-  if (status === 'CANCELLED') return <p className="mt-5 text-[13px] text-ink-3">This incident was cancelled.</p>
+  if (status === 'CANCELLED') return <p className="mt-5 text-[14px] text-ink-3">This incident was cancelled.</p>
   const shown = status === 'AWAITING_INFO' ? 'IN_PROGRESS' : status
   const idx = LIFECYCLE.indexOf(shown)
   return (
     <ol className="mt-5 grid grid-cols-4 sm:grid-cols-8 gap-1.5" aria-label="Lifecycle">
       {LIFECYCLE.map((st, i) => (
         <li key={st} className="min-w-0" aria-current={i === idx ? 'step' : undefined}>
-          <span className={cx('block h-[5px] rounded-full', i < idx ? 'bg-ink-2' : i === idx ? 'bg-action' : 'bg-sunken')} />
-          <span className={cx('block mt-1.5 text-[11.5px] truncate', i === idx ? 'font-bold text-action' : i < idx ? 'text-ink-2' : 'text-ink-3')}>
+          <span className={cx('block h-[6px] rounded-[1px]', i < idx ? 'bg-board-2' : i === idx ? 'bg-ink' : 'bg-sunken border border-line')} />
+          <span className={cx('block mt-1.5 text-[13px] truncate', i === idx ? 'font-bold text-ink' : i < idx ? 'text-ink-2' : 'text-ink-3')}>
             {st === 'IN_PROGRESS' && status === 'AWAITING_INFO' ? 'Waiting on reporter' : STATUS_LABEL[st]}
           </span>
         </li>
@@ -193,17 +193,18 @@ function SlaClock({ d }: { d: Detail }) {
   const Row = ({ label, due, doneAt, breached, target }: { label: string; due: number; doneAt: number | null; breached: boolean; target: number }) => {
     const left = due - now
     const state = doneAt ? (doneAt <= due ? 'met' : 'late') : breached || left < 0 ? 'breached' : paused && label === 'Resolution' ? 'paused' : left < (due - start) * 0.25 ? 'risk' : 'ok'
-    const bar = { ok: 'bg-ink-2', risk: 'bg-p3', breached: 'bg-p1', met: 'bg-ok', late: 'bg-p1', paused: 'bg-ink-3/40' }[state]
+    const bar = { ok: 'bg-plate', risk: 'bg-p3', breached: 'bg-p1', met: 'bg-[#8fd3ad]', late: 'bg-p1', paused: 'bg-chalk/40' }[state]
+    const urgent = label === 'Resolution' && !doneAt && state !== 'paused'
     return (
-      <div className="grid grid-cols-[88px_1fr_auto] sm:grid-cols-[104px_1fr_auto] items-center gap-4">
-        <div><div className="text-[12.5px] font-bold">{label}</div><div className="text-[11.5px] text-ink-3">target {minutes(target)}</div></div>
-        <div className="relative h-7">
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[10px] rounded-full bg-sunken" />
-          <div className={cx('absolute top-1/2 -translate-y-1/2 h-[10px] rounded-full', bar)} style={{ left: 0, width: pct(doneAt ?? Math.min(now, due)) }} />
-          {!doneAt && now > due && <div className="absolute top-1/2 -translate-y-1/2 h-[10px] rounded-r-full bg-p1/35" style={{ left: pct(due), width: `calc(${pct(now)} - ${pct(due)})` }} />}
-          <div className="absolute top-0 bottom-0 w-px bg-ink" style={{ left: pct(due) }} title={`Due ${fmtDateTime(new Date(due).toISOString())}`} />
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[120px_1fr_auto] items-center gap-x-4 gap-y-2">
+        <div><div className="text-[14px] font-semibold text-white">{label}</div><div className="text-[12.5px] text-chalk">target {minutes(target)}</div></div>
+        <div className="relative h-7 col-span-2 sm:col-span-1 order-last sm:order-none">
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[12px] rounded-[1px] bg-board-2" />
+          <div className={cx('absolute top-1/2 -translate-y-1/2 h-[12px] rounded-[1px]', bar)} style={{ left: 0, width: pct(doneAt ?? Math.min(now, due)) }} />
+          {!doneAt && now > due && <div className="absolute top-1/2 -translate-y-1/2 h-[12px] bg-p1/60" style={{ left: pct(due), width: `calc(${pct(now)} - ${pct(due)})` }} />}
+          <div className="absolute top-0 bottom-0 w-[2px] bg-white" style={{ left: pct(due) }} title={`Due ${fmtDateTime(new Date(due).toISOString())}`} />
         </div>
-        <div className={cx('mono text-[13px] font-semibold text-right w-[92px] sm:w-[118px]', { ok: 'text-ink', risk: 'text-warn', breached: 'text-bad', met: 'text-ok', late: 'text-bad', paused: 'text-ink-3' }[state])}>
+        <div className={cx('plate text-right whitespace-nowrap min-w-[112px] sm:w-[150px] px-3 pt-3.5 pb-1 font-display font-extrabold text-[24px] sm:text-[28px] leading-none tabular-nums', urgent && 'plate-reversed', urgent ? { ok: 'text-white', risk: 'text-[#ffd36b]', breached: 'text-[#ff9c92]', met: '', late: '', paused: '' }[state] : { ok: 'text-ink', risk: 'text-warn', breached: 'text-bad', met: 'text-ok', late: 'text-bad', paused: 'text-ink-3' }[state])}>
           {state === 'met' ? 'Met' : state === 'late' ? 'Missed' : state === 'paused' ? 'Paused' : left < 0 ? `${countdown(-left)} late` : `${countdown(left)} left`}
         </div>
       </div>
@@ -211,18 +212,18 @@ function SlaClock({ d }: { d: Detail }) {
   }
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <span className="panel-title">SLA clock</span>
-        <span className="text-[12px] text-ink-3">{d.slaPolicyName} policy · {s.priority} {s.priority && PRIORITY_LABEL[s.priority]}{paused ? ' · paused while waiting on reporter' : ''}</span>
+    <section className="bg-board rounded-[6px]" aria-label="SLA clock">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 h-12 border-b border-board-line">
+        <span className="font-display text-[18px] font-bold text-white">SLA clock</span>
+        <span className="text-[13px] text-chalk">{d.slaPolicyName} policy · {s.priority} {s.priority && PRIORITY_LABEL[s.priority]}{paused ? ' · paused while waiting on reporter' : ''}</span>
       </div>
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-3.5">
         <Row label="First response" due={resp} doneAt={ackAt} breached={d.responseBreached} target={d.responseTargetMinutes} />
         <Row label="Resolution" due={reso} doneAt={d.resolvedAt ? new Date(d.resolvedAt).getTime() : null} breached={d.resolutionBreached} target={d.resolutionTargetMinutes} />
-        <div className="grid grid-cols-[88px_1fr_auto] sm:grid-cols-[104px_1fr_auto] gap-4 text-[11.5px] text-ink-3 mono">
+        <div className="hidden sm:grid grid-cols-[120px_1fr_auto] gap-4 text-[13px] text-chalk tnum">
           <span />
           <span className="flex justify-between"><span>{fmtTime(s.createdAt)} opened</span><span>due {fmtTime(s.resolutionDueAt)}</span></span>
-          <span className="w-[92px] sm:w-[118px]" />
+          <span className="w-[112px] sm:w-[150px]" />
         </div>
       </div>
     </section>
@@ -230,17 +231,17 @@ function SlaClock({ d }: { d: Detail }) {
 }
 
 function Facts({ d }: { d: Detail }) {
-  const row = (k: string, v: ReactNode) => <div className="grid grid-cols-[120px_1fr] gap-3 py-2 border-b border-line last:border-0"><dt className="text-ink-3 text-[12.5px]">{k}</dt><dd className="text-[13px] font-semibold min-w-0">{v}</dd></div>
+  const row = (k: string, v: ReactNode) => <div className="grid grid-cols-[120px_1fr] gap-3 py-2 border-b border-line last:border-0"><dt className="text-ink-3 text-[13px]">{k}</dt><dd className="text-[13.5px] font-semibold min-w-0">{v}</dd></div>
   return (
     <section className="panel">
       <div className="panel-head"><span className="panel-title">Details</span></div>
       <dl className="px-4 py-1">
-        {row('Technician', d.assignee ? <>{d.assignee.name}<span className="block text-ink-3 font-normal text-[12px]">{d.assignee.email}</span></> : <span className="text-p2">Not assigned yet</span>)}
-        {row('Reporter', <>{d.reporter.name}<span className="block text-ink-3 font-normal text-[12px]">{d.reporter.department ?? d.reporter.email}</span></>)}
+        {row('Technician', d.assignee ? <>{d.assignee.name}<span className="block text-ink-3 font-normal text-[12.5px]">{d.assignee.email}</span></> : <span className="text-warn">Not assigned yet</span>)}
+        {row('Reporter', <>{d.reporter.name}<span className="block text-ink-3 font-normal text-[12.5px]">{d.reporter.department ?? d.reporter.email}</span></>)}
         {row('Impact', titleCase(d.impact))}
         {row('Urgency', titleCase(d.urgency))}
         {row('Affected users', <span className="mono">{d.affectedUsers.toLocaleString()}</span>)}
-        {row('Priority score', <><span className="mono">{d.priorityScore}</span>{d.priorityReason && <span className="block text-ink-3 font-normal text-[12px] leading-snug mt-0.5">{d.priorityReason}</span>}</>)}
+        {row('Priority score', <><span className="mono">{d.priorityScore}</span>{d.priorityReason && <span className="block text-ink-3 font-normal text-[12.5px] leading-snug mt-0.5">{d.priorityReason}</span>}</>)}
         {row('Opened', fmtDateTime(d.summary.createdAt))}
         {d.acknowledgedAt && row('Acknowledged', fmtDateTime(d.acknowledgedAt))}
         {d.closedAt && row('Closed', fmtDateTime(d.closedAt))}
@@ -262,14 +263,14 @@ function Conversation({ d, staff }: { d: Detail; staff: boolean }) {
   const LABEL: Record<string, string> = { INFO_REQUEST: 'asked for information', INFO_RESPONSE: 'replied', RESOLUTION: 'posted the resolution', INVESTIGATION_NOTE: 'internal note' }
   return (
     <section className="panel">
-      <div className="panel-head"><span className="panel-title">Conversation</span><span className="text-[12px] text-ink-3">{d.comments.length} message{d.comments.length === 1 ? '' : 's'}</span></div>
+      <div className="panel-head"><span className="panel-title">Conversation</span><span className="text-[12.5px] text-ink-3">{d.comments.length} message{d.comments.length === 1 ? '' : 's'}</span></div>
       {d.comments.length === 0 ? (
-        <p className="px-4 py-6 text-[13px] text-ink-3">No messages yet. {staff ? 'Updates you post here are visible to the reporter unless marked internal.' : 'Add anything that might help the technician.'}</p>
+        <p className="px-4 py-6 text-[13.5px] text-ink-3">No messages yet. {staff ? 'Updates you post here are visible to the reporter unless marked internal.' : 'Add anything that might help the technician.'}</p>
       ) : (
         <ol className="divide-y divide-line">
           {d.comments.map(c => (
             <li key={c.id} className={cx('px-4 py-3.5', c.internal && 'bg-p3-soft/50')}>
-              <div className="flex items-center gap-2 text-[12.5px]">
+              <div className="flex items-center gap-2 text-[13px]">
                 <span className="font-bold text-ink">{c.author}</span>
                 <span className="text-ink-3">{c.authorRole === 'EMPLOYEE' ? 'Reporter' : c.authorRole === 'TECHNICIAN' ? 'Technician' : 'Admin'}</span>
                 {LABEL[c.type] && <span className={cx('chip h-5', c.internal ? 'bg-p3-soft text-[#7a5303] border-p3/30' : 'bg-sunken text-ink-2 border-line')}>{c.internal && <Lock className="size-3" />}{LABEL[c.type]}</span>}
@@ -285,7 +286,7 @@ function Conversation({ d, staff }: { d: Detail; staff: boolean }) {
           <textarea className="input" rows={3} placeholder={internal ? 'Investigation note (only IT staff can see this)…' : 'Write a message…'} value={text} onChange={e => setText(e.target.value)} aria-label="Message" />
           <div className="flex items-center gap-3">
             {staff && d.allowedActions.includes('NOTE') && (
-              <label className="inline-flex items-center gap-2 text-[13px] font-semibold text-ink-2 cursor-pointer">
+              <label className="inline-flex items-center gap-2 text-[13.5px] font-semibold text-ink-2 cursor-pointer">
                 <input type="checkbox" className="size-4 accent-[var(--color-p3)]" checked={internal} onChange={e => setInternal(e.target.checked)} />Internal note
               </label>
             )}
@@ -305,18 +306,18 @@ function Recommendations({ id, d, onAssign, canAssign }: { id: number; d: Detail
     <section className="panel">
       <div className="panel-head"><span className="panel-title flex items-center gap-2"><Users className="size-4 text-action" />Best-fit technicians</span></div>
       {q.isLoading ? <div className="p-4 space-y-2"><Skeleton className="h-10" /><Skeleton className="h-10" /></div> : !q.data?.length ? (
-        <p className="p-4 text-[13px] text-ink-3">Nobody else has spare capacity right now.</p>
+        <p className="p-4 text-[13.5px] text-ink-3">Nobody else has spare capacity right now.</p>
       ) : (
         <ul className="divide-y divide-line">
           {q.data.slice(0, 4).map((r, i) => (
             <li key={r.technicianId} className="px-4 py-3 space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[13px]">{r.name}</span>
+                <span className="font-bold text-[13.5px]">{r.name}</span>
                 {i === 0 && <span className="chip h-5 bg-action-soft text-action border-action/25">Top match</span>}
-                <span className="ml-auto mono text-[12px] text-ink-2">{Math.round(r.score * 100)}</span>
+                <span className="ml-auto mono text-[15px] font-semibold text-ink-2">{Math.round(r.score * 100)}</span>
                 {canAssign && <button className="btn-secondary btn-sm h-7" onClick={() => onAssign(r.technicianId)}>Assign</button>}
               </div>
-              <div className="text-[12px] text-ink-3">{r.skills.join(', ')} · {r.reason}</div>
+              <div className="text-[12.5px] text-ink-3">{r.skills.join(', ')} · {r.reason}</div>
               <CapacityBar value={r.activeLoad} max={r.maxWorkload} />
             </li>
           ))}
@@ -335,9 +336,9 @@ function SuggestedFixes({ id }: { id: number }) {
       <ul className="divide-y divide-line">
         {q.data.map(s => (
           <li key={s.id} className="px-4 py-3">
-            <div className="flex items-center gap-2 text-[12px]"><Link to={`/incidents/${s.id}`} className="mono text-ink-3 hover:text-action">{s.number}</Link><span className="ml-auto mono text-ink-3">{Math.round(s.score * 100)}% similar</span></div>
-            <div className="text-[13px] font-semibold mt-0.5">{s.title}</div>
-            <p className="text-[12.5px] text-ink-2 mt-1 flex gap-1.5"><CornerDownRight className="size-3.5 mt-0.5 shrink-0 text-ink-3" />{s.resolution}</p>
+            <div className="flex items-center gap-2 text-[12.5px]"><Link to={`/incidents/${s.id}`} className="mono text-ink-3 hover:text-action">{s.number}</Link><span className="ml-auto mono text-ink-3">{Math.round(s.score * 100)}% similar</span></div>
+            <div className="text-[13.5px] font-semibold mt-0.5">{s.title}</div>
+            <p className="text-[13px] text-ink-2 mt-1 flex gap-1.5"><CornerDownRight className="size-3.5 mt-0.5 shrink-0 text-ink-3" />{s.resolution}</p>
           </li>
         ))}
       </ul>
@@ -350,15 +351,15 @@ function SimilarOpen({ id, createdAt, onMerge }: { id: number; createdAt: string
   if (!q.data?.length) return null
   return (
     <section className="panel">
-      <div className="panel-head"><span className="panel-title flex items-center gap-2"><GitMerge className="size-4 text-p2" />Possibly the same problem</span></div>
+      <div className="panel-head"><span className="panel-title flex items-center gap-2"><GitMerge className="size-4 text-warn" />Possibly the same problem</span></div>
       <ul className="divide-y divide-line">
         {q.data.map(s => (
           <li key={s.id} className="px-4 py-3">
-            <div className="flex items-center gap-2 text-[12px]"><Link to={`/incidents/${s.id}`} className="mono text-ink-3 hover:text-action">{s.number}</Link><StatusBadge status={s.status} /><span className="ml-auto mono text-ink-3">{Math.round(s.score * 100)}%</span></div>
-            <div className="text-[13px] font-semibold mt-1">{s.title}</div>
+            <div className="flex items-center gap-2 text-[12.5px]"><Link to={`/incidents/${s.id}`} className="mono text-ink-3 hover:text-action">{s.number}</Link><StatusBadge status={s.status} /><span className="ml-auto mono text-ink-3">{Math.round(s.score * 100)}%</span></div>
+            <div className="text-[13.5px] font-semibold mt-1">{s.title}</div>
             {s.createdAt < createdAt
               ? <button className="btn-ghost btn-sm mt-1 -ml-2" onClick={() => onMerge(s.id)}>Mark this a duplicate of {s.number}</button>
-              : <span className="block text-[12px] text-ink-3 mt-1">Reported after this one</span>}
+              : <span className="block text-[12.5px] text-ink-3 mt-1">Reported after this one</span>}
           </li>
         ))}
       </ul>
@@ -369,15 +370,15 @@ function SimilarOpen({ id, createdAt, onMerge }: { id: number; createdAt: string
 function Timeline({ items, loading }: { items?: AuditView[]; loading: boolean }) {
   return (
     <section className="panel">
-      <div className="panel-head"><span className="panel-title">Audit trail</span><span className="text-[12px] text-ink-3">{items?.length ?? 0} events</span></div>
+      <div className="panel-head"><span className="panel-title">Audit trail</span><span className="text-[12.5px] text-ink-3">{items?.length ?? 0} events</span></div>
       {loading ? <div className="p-4 space-y-2"><Skeleton className="h-8" /><Skeleton className="h-8" /><Skeleton className="h-8" /></div> : (
         <ol className="px-4 py-3 max-h-[440px] overflow-y-auto">
           {items?.map(a => (
             <li key={a.id} className="relative pl-5 pb-3 last:pb-0 before:absolute before:left-[4px] before:top-2 before:bottom-0 before:w-px before:bg-line last:before:hidden">
               <span className={cx('absolute left-0 top-[6px] size-[9px] rounded-full border-2 border-surface', /BREACH|ESCALAT|MAJOR/.test(a.action) ? 'bg-p1' : a.toState && a.fromState !== a.toState && a.fromState ? 'bg-action' : 'bg-line-strong')} />
-              <div className="flex items-baseline gap-2 text-[11.5px]"><span className="mono text-ink-3">{fmtTime(a.timestamp)}</span><span className="font-semibold text-ink-2">{a.actor}</span></div>
-              <p className="text-[12.5px] text-ink leading-snug">{a.description}</p>
-              {a.fromState && a.toState && a.fromState !== a.toState && <p className="text-[11.5px] text-ink-3 mono">{a.fromState} → {a.toState}</p>}
+              <div className="flex items-baseline gap-2 text-[12px]"><span className="mono text-ink-3">{fmtTime(a.timestamp)}</span><span className="font-semibold text-ink-2">{a.actor}</span></div>
+              <p className="text-[13px] text-ink leading-snug">{a.description}</p>
+              {a.fromState && a.toState && a.fromState !== a.toState && <p className="text-[12px] text-ink-3 mono">{a.fromState} → {a.toState}</p>}
             </li>
           ))}
         </ol>
@@ -466,13 +467,13 @@ function ActionDialogs({ d, which, close, busy, error, run }: {
       </Dialog>
       <Dialog open={which === 'CANCEL'} onClose={reset} title="Cancel this incident">
         <form className="space-y-4" onSubmit={submit('cancel', { text }, 'Incident cancelled')}>
-          <p className="text-[13px] text-ink-2">Cancelled incidents leave every queue and can't be reopened. The reason is kept in the audit trail.</p>
+          <p className="text-[13.5px] text-ink-2">Cancelled incidents leave every queue and can't be reopened. The reason is kept in the audit trail.</p>
           {textField('Reason', undefined, 3)}{err}{footer('Cancel incident', true, !text.trim())}
         </form>
       </Dialog>
       <Dialog open={which === 'MERGE'} onClose={reset} title="Merge as a duplicate">
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); const n = Number(root.replace(/\D/g, '')); run('merge', { duplicateOfId: n >= 1000 ? n - 1000 : n }, 'Merged as duplicate') }}>
-          <p className="text-[13px] text-ink-2">This incident will be cancelled and linked to the original, which keeps all the work.</p>
+          <p className="text-[13.5px] text-ink-2">This incident will be cancelled and linked to the original, which keeps all the work.</p>
           <Field label="Original incident number" hint="e.g. INC1105"><input className="input mono" value={root} onChange={e => setRoot(e.target.value)} autoFocus /></Field>
           {err}{footer('Merge', true, !/\d+/.test(root))}
         </form>
@@ -509,7 +510,7 @@ function ActionDialogs({ d, which, close, busy, error, run }: {
               <Field label="Affected users"><input className="input mono" type="number" min={1} value={edit.affectedUsers} onChange={e => setEdit(s => ({ ...s, affectedUsers: Number(e.target.value) }))} /></Field>
             </div>
           )}
-          {d.allowedActions.includes('REASSESS') && <p className="text-[12.5px] text-ink-3">Changing impact, urgency or users recalculates priority and SLA deadlines.</p>}
+          {d.allowedActions.includes('REASSESS') && <p className="text-[13px] text-ink-3">Changing impact, urgency or users recalculates priority and SLA deadlines.</p>}
           <ErrorNote error={save.error} />
           <div className="flex justify-end gap-2"><button type="button" className="btn-ghost" onClick={close}>Back</button><button className="btn-primary" disabled={save.isPending}>{save.isPending ? <Spinner /> : 'Save changes'}</button></div>
         </form>

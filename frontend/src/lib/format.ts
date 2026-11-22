@@ -48,4 +48,9 @@ export function minutes(m: number): string {
   return `${Math.floor(m / 60)} h ${m % 60} min`
 }
 
-export const titleCase = (s: string) => s.toLowerCase().replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())
+export const titleCase = (s: string) => s.toLowerCase().replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase()).replace(/\bit\b/i, 'IT')
+
+/** Remaining time for display: "1h 05m" (or "1h 05m left"), and "2d 3h late" once overdue, never a minus sign. */
+export function timeLeft(ms: number, withLeft = false): string {
+  return ms < 0 ? `${countdown(-ms)} late` : withLeft ? `${countdown(ms)} left` : countdown(ms)
+}
